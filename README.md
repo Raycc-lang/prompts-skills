@@ -1,6 +1,6 @@
 # prompts-skills
 
-A personal library of reusable **Claude Agent Skills** and **prompts**, kept in one repo so they can be versioned, shared, and installed anywhere.
+A personal library of reusable **agent skills** and **prompts**, kept in one repo so they can be versioned, shared, and installed anywhere. The skills follow the standard `SKILL.md` folder format and work with any agent that supports it; the prompts are self-contained text you can paste into any model.
 
 ## Layout
 
@@ -26,7 +26,7 @@ templates/       Starting points for new skills and prompts
 
 Skills are discovered by directory. Copy or symlink the ones you want:
 
-**Claude Code / Cowork (personal, all projects)**
+**Claude Code (personal, all projects)**
 
 ```bash
 # macOS / Linux
@@ -51,11 +51,11 @@ Symlinking means edits in this repo take effect immediately. Use `cp -r` instead
 3. Write the body: what to do, when, and what good output looks like.
 4. Add a row to the table above.
 
-The `description` field is the only thing Claude sees when deciding whether to load a skill, so it must state both **what the skill does** and **when to trigger it**. Everything else lives in the body and loads only on demand.
+The `description` field is the only thing the agent sees when deciding whether to load a skill, so it must state both **what the skill does** and **when to trigger it**. Everything else lives in the body and loads only on demand.
 
 ## Adding a new prompt
 
-Drop a `.md` file in the matching `prompts/` subfolder using `templates/prompt-template.md`. Prompts are self-contained text you paste in; skills are folders Claude loads automatically.
+Drop a `.md` file in the matching `prompts/` subfolder using `templates/prompt-template.md`. Prompts are self-contained text you paste in; skills are folders the agent loads automatically.
 
 ## Skill vs. prompt — which one?
 
