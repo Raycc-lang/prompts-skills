@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 """daily.py — 一条命令串起当天的英文阅读流程。
 
-    python daily.py                    # 全流程: 备料(若有缺) -> 点选 -> 阅读
+    python daily.py                    # 全流程: 备料(若有缺) -> 浏览器阅读工作流
     python daily.py url <网址>         # 先备料再走流程
     python daily.py pdf <文件> [--words N]
     python daily.py paste
-    python daily.py --skip-prep        # 今天已有 article.txt,直接点选
-    python daily.py --only-read        # 直接进阅读器
+    python daily.py --skip-prep        # 今天已有 article.txt,直接打开工作流
+    python daily.py --only-read        # 直接打开今天的浏览器工作流
 
-流程: prep(可选) -> pick(起服务器,浏览器点选,提交后自动跑 smd) -> read
-点选服务器用 Ctrl+C 结束后自动进入阅读器。
+流程: prep(可选) -> pick 浏览器工作流（点选 -> 学词 -> 深度阅读）
+提交选词后，SMD 在服务器后台运行，完成后页面自动显示学习内容。
 """
 
 import argparse
@@ -39,7 +39,7 @@ def main():
     ap.add_argument("--start-page", type=int, default=None,
                     help="PDF 从第几页开始（会记住并续读）")
     ap.add_argument("--skip-prep", action="store_true", help="跳过备料")
-    ap.add_argument("--only-read", action="store_true", help="只进阅读器")
+    ap.add_argument("--only-read", action="store_true", help="只打开浏览器工作流")
     ap.add_argument("--no-run", action="store_true",
                     help="点选提交后不自动跑 smd.py")
     args = ap.parse_args()
@@ -49,7 +49,7 @@ def main():
 
     # ---- 备料
     if args.only_read:
-        return run([sys.executable, os.path.join(SCRIPT_DIR, "read.py")])
+        return run([sys.executable, os.path.join(SCRIPT_DIR, "pick.py")])
 
     if args.cmd:
         prep_cmd = [sys.executable, os.path.join(SCRIPT_DIR, "prep.py"),
@@ -71,19 +71,11 @@ def main():
                  "  python daily.py paste\n"
                  "  python daily.py --skip-prep   (已有 article.txt 时)")
 
-    # ---- 点选（提交后自动跑 smd，Ctrl+C 关服务器）
+    # ---- 浏览器工作流：提交后在同一页面异步生成并进入学习/深读阶段
     pick_cmd = [sys.executable, os.path.join(SCRIPT_DIR, "pick.py")]
     if args.no_run:
         pick_cmd.append("--no-run")
-    rc = run(pick_cmd)
-
-    # ---- 阅读
-    smd_dir = os.path.join(today_dir, "smd")
-    if os.path.isdir(smd_dir) and os.listdir(smd_dir):
-        return run([sys.executable, os.path.join(SCRIPT_DIR, "read.py")])
-    if args.no_run:
-        print("\nbatch.txt 已写出。跑完 smd.py 后用 python tools/read.py 阅读")
-    return rc
+    return run(pick_cmd)
 
 
 if __name__ == "__main__":

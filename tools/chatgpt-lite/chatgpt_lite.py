@@ -27,22 +27,33 @@ import os
 import sys
 import time
 import uuid
+from pathlib import Path
 
 # ---------------------------------------------------------------------------
-# 把 chatgpt2api 加入 sys.path 以复用其反爬工具模块
+# 把 chatgpt2api 加入 sys.path 以复用其反爬工具模块。优先使用显式配置，
+# 否则尝试仓库旁边的同名 checkout，不依赖作者机器上的绝对路径。
 # ---------------------------------------------------------------------------
-C2A_DIR = r"C:\Users\Ray\Documents\Projects\chatgpt2api"
-if C2A_DIR not in sys.path:
-    sys.path.insert(0, C2A_DIR)
+_configured_c2a = os.environ.get("CHATGPT2API_DIR", "").strip()
+_candidate_c2a = [Path(_configured_c2a)] if _configured_c2a else []
+_candidate_c2a.append(Path(__file__).resolve().parents[2].parent / "chatgpt2api")
+for _path in _candidate_c2a:
+    if (_path / "utils").is_dir() and str(_path) not in sys.path:
+        sys.path.insert(0, str(_path))
 
-from curl_cffi import requests as cffi_requests          # noqa: E402
-from utils.pow import (                                    # noqa: E402
-    build_legacy_requirements_token,
-    build_proof_token,
-    parse_pow_resources,
-)
-from utils.turnstile import solve_turnstile_token          # noqa: E402
-from utils.helper import iter_sse_payloads, new_uuid       # noqa: E402
+try:
+    from curl_cffi import requests as cffi_requests          # noqa: E402
+    from utils.pow import (                                  # noqa: E402
+        build_legacy_requirements_token,
+        build_proof_token,
+        parse_pow_resources,
+    )
+    from utils.turnstile import solve_turnstile_token        # noqa: E402
+    from utils.helper import iter_sse_payloads, new_uuid     # noqa: E402
+except ModuleNotFoundError as exc:
+    raise ImportError(
+        "chatgpt-lite requires the chatgpt2api checkout and its dependencies. "
+        "Set CHATGPT2API_DIR to that checkout, or place it beside this repository."
+    ) from exc
 
 # ---------------------------------------------------------------------------
 # 常量

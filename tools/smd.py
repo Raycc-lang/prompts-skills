@@ -91,7 +91,7 @@ def build_message(word: str, sentence: str, pos: str) -> str:
 
 def save_result(out, word, sentence, pos, reply, latency, conv, mode) -> str:
     os.makedirs(out, exist_ok=True)
-    stamp = time.strftime("%Y%m%d-%H%M%S")
+    stamp = time.strftime("%Y%m%d-%H%M%S") + f"-{time.time_ns() % 1_000_000_000:09d}"
     path = os.path.join(out, f"{stamp}_{sanitize(word)}.md")
     meta = [
         f"# SMD: {word}",
@@ -242,6 +242,11 @@ class Runner:
                 self._note(word, "failed", msg[:120])
                 print(f"[失败] {word}: {msg[:120]}", flush=True)
                 return
+            except Exception as e:
+                msg = f"{type(e).__name__}: {e}"
+                self._note(word, "failed", msg[:120])
+                print(f"[失败] {word}: {msg[:120]}", flush=True)
+                return
 
     @staticmethod
     def _reset_wait(msg: str) -> float:
@@ -351,6 +356,7 @@ class Runner:
         for t in self.workers:
             t.join(timeout=5)
         self.summary()
+        return self.stats["failed"] == 0
 
 
 def main():
@@ -379,7 +385,8 @@ def main():
         runner = Runner(args.concurrency, args.out, args.config,
                         args.thinking, args.force)
         runner.start()
-        runner.batch(args.file)
+        if not runner.batch(args.file):
+            raise SystemExit(1)
     elif args.input:
         if "|" in args.input and not args.sentence:
             word, sentence, pos = parse_line(args.input)

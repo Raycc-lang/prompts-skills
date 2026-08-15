@@ -253,15 +253,15 @@ def prep_pdf(pdf_path, words_per_day, start_page=None):
                         if p.strip())
     wc = len(chunk.split())
 
+    print(f"进度: 第 {page}~{end_page} 页 / 共 {total_pages} 页 "
+          f"({end_page / total_pages * 100:.0f}%)，本次约 {wc} 词")
+    article_path = write_article(
+        chunk, f"{os.path.basename(pdf_path)} 第{page}~{end_page}页")
     entry["page"] = end_page + 1
     entry["pages"] = total_pages
     pdf_state[key] = entry
     save_state(state)
-
-    print(f"进度: 第 {page}~{end_page} 页 / 共 {total_pages} 页 "
-          f"({end_page / total_pages * 100:.0f}%)，本次约 {wc} 词")
-    return write_article(
-        chunk, f"{os.path.basename(pdf_path)} 第{page}~{end_page}页")
+    return article_path
 
 
 # ---------------------------------------------------------------- paste
