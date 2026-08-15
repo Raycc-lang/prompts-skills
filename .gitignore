@@ -6,6 +6,7 @@ desktop.ini
 # Editors
 .vscode/
 .idea/
+.workbuddy
 *.swp
 *~
 
@@ -15,6 +16,21 @@ desktop.ini
 scratch/
 tmp/
 *.local.md
+*.pdf
+
+# Generated reading/output data
+reading/
+smd-output/
+
+# tools: credentials — never commit
+tools/claude-lite/claude_config.json
+tools/chatgpt-lite/chatgpt_tokens.json
+
+# tools: scraped frontend artifacts and API dumps (regenerable)
+tools/claude-lite/_claude_js/
+tools/claude-lite/_claude_new.html
+tools/claude-lite/bootstrap_*.json
+tools/claude-lite/selector_*.json
 
 # Python (for any skill helper scripts)
 __pycache__/

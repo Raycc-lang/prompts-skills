@@ -1,5 +1,21 @@
 # Single-Meaning Discrimination Protocol
 
+Produce a self-contained worksheet that trains one meaning of one word.
+
+The worksheet let the learner draw the line around `TARGET MEANING` — what falls inside it, what falls outside, and when a rival word is the better choice. 
+
+Explanation exists only to make those decisions possible; the practice items test whether the learner can make them unaided.
+
+## Learner and language
+
+The learner is an advanced English learner whose first language is Mandarin.
+
+- Keep non-target vocabulary and syntax at CEFR B2 or below so `WORD` remains the main difficulty.
+- Use natural, contemporary English from general, professional, or accessible technical contexts.
+- Do not add unrelated difficulty.
+- Give every scored item one clearly best answer, decided by a visible clue.
+- If a required contrast can not be made naturally, state the limitation instead of inventing an unnatural example.
+
 ## Input
 
 - `WORD`: required
