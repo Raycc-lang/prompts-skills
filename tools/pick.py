@@ -10,9 +10,11 @@ import re
 import socket
 import subprocess
 import sys
+import tempfile
 import threading
 import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from urllib.parse import parse_qs, urlsplit
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SCRIPT_DIR)
@@ -21,6 +23,51 @@ SMD_PATH = os.path.join(SCRIPT_DIR, "smd.py")
 WORD_RE = re.compile(r"[A-Za-z][a-zA-Z'-]*[a-zA-Z]|[A-Za-z]")
 SENT_END = (".", "!", "?", "。", "！", "？")
 MAX_SUBMIT_BYTES = 64 * 1024
+JOB_STATE_NAME = "smd-job.json"
+SMD_LOG_NAME = "smd.log"
+
+
+def atomic_write_json(path, payload):
+    directory = os.path.dirname(os.path.abspath(path))
+    os.makedirs(directory, exist_ok=True)
+    fd, temp_path = tempfile.mkstemp(
+        prefix=os.path.basename(path) + ".", suffix=".tmp", dir=directory)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(payload, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+        os.replace(temp_path, path)
+    except Exception:
+        try:
+            os.unlink(temp_path)
+        except OSError:
+            pass
+        raise
+
+
+def load_json(path):
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return None
+
+
+def process_is_running(pid):
+    if not isinstance(pid, int) or pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+    except OSError:
+        return False
+    return True
+
+
+def detached_popen_kwargs():
+    if os.name == "nt":
+        return {"creationflags": (subprocess.CREATE_NEW_PROCESS_GROUP |
+                                  subprocess.DETACHED_PROCESS)}
+    return {"start_new_session": True}
 
 
 class SubmissionInProgressError(RuntimeError):
@@ -531,8 +578,21 @@ async function pollStatus() {
     const response = await fetch('/status', {cache:'no-store'});
     const data = await response.json();
     if (data.worksheets) renderWorksheets(data);
-    if (data.status === 'running') {
-      $('learn-status').textContent = 'SMD is generating worksheets… ' + data.completed + '/' + data.total + ' complete';
+    if (!sel.size && data.tasks?.length) {
+      data.tasks.forEach(task => {
+        const lower = task.word.toLowerCase();
+        const spans = spansFor(lower);
+        sel.set(lower, {word:task.word, display:task.word,
+          sentence:task.sentence || '', count:spans.length});
+        spans.forEach(span => span.classList.add('sel'));
+      });
+      renderSidebar();
+    }
+    if (data.status === 'running' || data.status === 'starting') {
+      const waiting = (data.tasks || []).find(task => task.status === 'waiting');
+      $('learn-status').textContent = waiting
+        ? 'Rate limited · retry ' + waiting.attempt + ' at ' + waiting.next_retry_at + ' · ' + data.completed + '/' + data.total + ' complete'
+        : 'SMD is generating worksheets… ' + data.completed + '/' + data.total + ' complete';
       pollTimer = setTimeout(pollStatus, 1200);
     } else if (data.status === 'done') {
       $('learn-status').textContent = data.archive_total ? 'Worksheets ready · ' + data.archive_total + ' words' : 'No vocabulary learning was requested';
@@ -608,8 +668,25 @@ class PickServer:
         self.error = ""
         self.total = self.completed = 0
         self.selected_words = []
+        self.state_path = os.path.join(day_dir, JOB_STATE_NAME)
+        self.log_path = os.path.join(day_dir, SMD_LOG_NAME)
         self._sheets_sig = None
         self._sheets_cache = []
+        self._restore_state()
+
+    def _restore_state(self):
+        state = load_json(self.state_path) or {}
+        tasks = state.get("tasks") or []
+        self.selected_words = [str(task.get("word", "")) for task in tasks
+                               if task.get("word")]
+        self.total = int(state.get("total") or len(self.selected_words))
+        self.status = str(state.get("status") or "idle")
+        self.error = str(state.get("error") or "")
+        if self.status == "running" and not process_is_running(state.get("pid")):
+            self.status = "failed"
+            self.error = "The saved SMD worker is no longer running"
+            state.update(status=self.status, error=self.error, pid=None)
+            atomic_write_json(self.state_path, state)
 
     def handler(self):
         outer = self
@@ -618,10 +695,19 @@ class PickServer:
             def send_body(self, code, body, ctype="text/html; charset=utf-8"):
                 data = body.encode("utf-8"); self.send_response(code); self.send_header("Content-Type", ctype); self.send_header("Content-Length", str(len(data))); self.end_headers(); self.wfile.write(data)
             def do_GET(self):
-                if self.path in ("/", "/index.html"):
+                request = urlsplit(self.path)
+                if request.path in ("/", "/index.html"):
                     self.send_body(200, outer.page_html)
-                elif self.path == "/status":
+                elif request.path == "/status":
                     self.send_body(200, json.dumps(outer.status_payload(), ensure_ascii=False), "application/json; charset=utf-8")
+                elif request.path == "/reload":
+                    day = parse_qs(request.query).get("day", [""])[0]
+                    ok, msg = outer.reload(day)
+                    if ok:
+                        body = {"message": "reloaded", "day": msg}
+                        self.send_body(200, json.dumps(body, ensure_ascii=False), "application/json; charset=utf-8")
+                    else:
+                        self.send_body(400, json.dumps({"message": msg}, ensure_ascii=False), "application/json; charset=utf-8")
                 else: self.send_body(404, "not found", "text/plain")
             def do_POST(self):
                 if self.path != "/submit": self.send_body(404, "not found", "text/plain"); return
@@ -656,6 +742,32 @@ class PickServer:
                     self.send_body(400, json.dumps({"message":str(e)}, ensure_ascii=False), "application/json; charset=utf-8")
         return H
 
+    def reload(self, day):
+        """Switch to a validated reading day and rebuild the page."""
+        if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day or ""):
+            return False, "A valid reading day is required"
+        reading_root = os.path.realpath(READING_DIR)
+        day_dir = os.path.realpath(os.path.join(reading_root, day))
+        if os.path.commonpath((reading_root, day_dir)) != reading_root:
+            return False, "Reading day is outside the reading directory"
+        article_path = os.path.join(day_dir, "article.txt")
+        try:
+            with open(article_path, encoding="utf-8") as f:
+                text = f.read()
+        except OSError as e:
+            return False, f"Unable to read article.txt: {e}"
+        with self.lock:
+            self.day_dir = day_dir
+            self.state_path = os.path.join(day_dir, JOB_STATE_NAME)
+            self.log_path = os.path.join(day_dir, SMD_LOG_NAME)
+            self.page_html = render_page(text, self.run_smd)
+            self.process = None
+            self.status, self.error, self.total = "idle", "", 0
+            self.selected_words = []
+            self._sheets_sig, self._sheets_cache = None, []
+            self._restore_state()
+        return True, day
+
     def load_sheets(self):
         out = os.path.join(self.day_dir, "smd")
         try:
@@ -688,7 +800,28 @@ class PickServer:
 
     def status_payload(self):
         sheets = self.load_sheets()
+        state = load_json(self.state_path) or {}
         with self.lock:
+            if state:
+                state_status = str(state.get("status") or self.status)
+                locally_starting = (
+                    state_status == "starting" and self.process is not None and
+                    self.process.poll() is None)
+                if (state_status in ("starting", "running") and
+                        not locally_starting and
+                        not process_is_running(state.get("pid"))):
+                    state_status = "failed"
+                    state.update(status="failed", pid=None,
+                                 error="The saved SMD worker is no longer running")
+                    atomic_write_json(self.state_path, state)
+                elif state_status != "starting":
+                    self.process = None
+                self.status = state_status
+                self.error = str(state.get("error") or "")
+                self.total = int(state.get("total") or self.total)
+                tasks = state.get("tasks") or []
+                self.selected_words = [str(task.get("word", "")) for task in tasks
+                                       if task.get("word")]
             status, error, total = self.status, self.error, self.total
             selected_words = list(self.selected_words)
         # Keep the complete SMD archive visible, while reporting generation
@@ -701,6 +834,8 @@ class PickServer:
             total = len(sheets)
         return {"status": status, "error": error, "total": total,
                 "completed": completed, "archive_total": len(sheets),
+                "selected_words": selected_words,
+                "tasks": state.get("tasks", []),
                 "worksheets": sheets}
 
     def submit(self, items):
@@ -708,8 +843,16 @@ class PickServer:
         if not valid: raise ValueError("No words selected")
         batch_path = os.path.join(self.day_dir, "batch.txt")
         with self.lock:
-            if self.status == "running":
+            state = load_json(self.state_path) or {}
+            locally_starting = (self.process is not None and
+                                self.process.poll() is None)
+            active = (state.get("status") in ("starting", "running") and
+                      (locally_starting or
+                       process_is_running(state.get("pid"))))
+            if active:
                 raise SubmissionInProgressError("SMD generation is already running")
+            if self.status == "running":
+                self.status = "failed"
             self.selected_words = [word for word, _ in valid]
             with open(batch_path, "w", encoding="utf-8") as f:
                 f.write(f"# Selected {datetime.datetime.now():%Y-%m-%d %H:%M}\n" + "\n".join(f"{w} | {s} | " for w,s in valid) + "\n")
@@ -717,26 +860,34 @@ class PickServer:
                 self.status, self.error, self.total = "done", "", len(valid)
                 return f"Wrote {len(valid)} words to batch.txt"
             out = os.path.join(self.day_dir, "smd"); os.makedirs(out, exist_ok=True)
-            cmd = [sys.executable, SMD_PATH, "-f", batch_path, "--out", out, "--concurrency", str(self.concurrency)]
+            cmd = [sys.executable, "-X", "utf8", SMD_PATH, "-f", batch_path,
+                   "--out", out, "--concurrency", str(self.concurrency),
+                   "--state", self.state_path]
+            initial_state = {
+                "status": "starting", "pid": None,
+                "started_at": datetime.datetime.now().isoformat(timespec="seconds"),
+                "updated_at": datetime.datetime.now().isoformat(timespec="seconds"),
+                "total": len(valid), "completed": 0,
+                "tasks": [{"word": word, "sentence": sentence, "status": "pending",
+                           "attempt": 0} for word, sentence in valid],
+            }
+            atomic_write_json(self.state_path, initial_state)
             try:
-                process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding="utf-8", errors="replace")
+                with open(self.log_path, "a", encoding="utf-8", buffering=1) as log:
+                    process = subprocess.Popen(
+                        cmd, stdin=subprocess.DEVNULL, stdout=log,
+                        stderr=subprocess.STDOUT, cwd=SCRIPT_DIR,
+                        **detached_popen_kwargs())
+                # The worker publishes its own PID and owns all subsequent
+                # state updates. The parent must not race it after spawn.
             except Exception as exc:
                 self.status, self.error, self.total = "failed", str(exc), len(valid)
+                initial_state.update(status="failed", error=str(exc))
+                atomic_write_json(self.state_path, initial_state)
                 return f"Batch saved, but SMD could not start: {exc}"
             self.process = process
             self.status, self.error, self.total = "running", "", len(valid)
-        threading.Thread(target=self._drain, args=(process, out), daemon=True).start()
-        return f"Started SMD for {len(valid)} words. This page will update when worksheets are ready."
-
-    def _drain(self, process, out):
-        for line in process.stdout: print("[smd] " + line.rstrip(), flush=True)
-        code = process.wait()
-        with self.lock:
-            if self.process is process:
-                self.process = None
-            self.status = "done" if code == 0 else "failed"
-            self.error = "SMD exited with code " + str(code) if code else ""
-        print(f"[smd] finished ({code}), output -> {out}", flush=True)
+        return f"Started SMD for {len(valid)} words. It will continue after this window closes."
 
 
 def free_port(preferred):

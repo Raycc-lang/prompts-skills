@@ -28,11 +28,14 @@
 
 import argparse
 import glob
+import json
 import os
 import queue
+import random
 import re
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 
@@ -57,6 +60,24 @@ PROMPT_PATH = os.path.join(
 DEFAULT_OUT = os.path.join(ROOT, "smd-output")
 DEFAULT_CONFIG = os.path.join(SCRIPT_DIR, "claude-lite", "claude_config.json")
 RESET_RE = re.compile(r"(\d{4}-\d{2}-\d{2} \d{2}:\d{2})")
+
+
+def atomic_write_json(path, payload):
+    directory = os.path.dirname(os.path.abspath(path))
+    os.makedirs(directory, exist_ok=True)
+    fd, temp_path = tempfile.mkstemp(
+        prefix=os.path.basename(path) + ".", suffix=".tmp", dir=directory)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            json.dump(payload, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+        os.replace(temp_path, path)
+    except Exception:
+        try:
+            os.unlink(temp_path)
+        except OSError:
+            pass
+        raise
 
 
 def sanitize(word: str) -> str:
@@ -120,8 +141,8 @@ def final_render(reply: str):
 
 def run_single(word, sentence, pos, out, config, thinking, use_glow=False):
     mode = "thinking, effort=low" if thinking else "no-thinking"
-    render = "rich 流式渲染" if _HAS_RICH else "纯文本流式"
-    print(f"调用 {MODEL} ({mode})，{render}:", flush=True)
+    render = "Rich streaming" if _HAS_RICH else "plain-text streaming"
+    print(f"Calling {MODEL} ({mode}) with {render}:", flush=True)
 
     client = ClaudeLite.from_config(config)
     t0 = time.time()
@@ -161,17 +182,18 @@ def run_single(word, sentence, pos, out, config, thinking, use_glow=False):
         try:
             subprocess.run(["glow", path], check=False)
         except FileNotFoundError:
-            print("未找到 glow，改用内置渲染:", flush=True)
+            print("glow was not found; using the built-in renderer:", flush=True)
             final_render(reply)
     else:
         final_render(reply)
-    print(f"已保存: {path}  ({latency}s, {len(reply)} 字符)", flush=True)
+    print(f"Saved: {path} ({latency}s, {len(reply)} characters)", flush=True)
 
 
 class Runner:
     """任务队列 + worker 线程池，交互式与批量模式共用。"""
 
-    def __init__(self, concurrency, out, config, thinking, force):
+    def __init__(self, concurrency, out, config, thinking, force,
+                 state_path=None):
         self.concurrency = max(1, min(concurrency, 4))
         self.out = out
         self.config = config
@@ -184,6 +206,12 @@ class Runner:
         self.running = 0
         self.results = []
         self.workers = []
+        self.cooldown_until = 0.0
+        self.rate_limit_attempts = 0
+        self.retry_lock = threading.Lock()
+        self.state_path = state_path
+        self.task_states = {}
+        self.started_at = time.strftime("%Y-%m-%dT%H:%M:%S")
 
     def start(self):
         for _ in range(self.concurrency):
@@ -210,56 +238,128 @@ class Runner:
 
     def _process(self, client, task):
         word, sentence, pos = task
+        self._update_task(word, status="running")
         if not self.force and exists(self.out, word):
-            self._note(word, "skipped", "已有输出（--force 重跑）")
-            print(f"[跳过] {word}: 已有输出", flush=True)
+            info = "Output already exists (use --force to rerun)"
+            self._note(word, "skipped", info)
+            self._update_task(word, status="skipped", info=info)
+            print(f"[SKIPPED] {word}: output already exists", flush=True)
             return
-        for attempt in (1, 2):
+        attempt = 0
+        while True:
+            attempt += 1
             try:
-                t0 = time.time()
-                reply, conv = client.chat(
-                    build_message(word, sentence, pos), model=MODEL,
-                    thinking=self.thinking,
-                    effort="low" if self.thinking else "",
-                )
+                if attempt == 1:
+                    self._wait_for_cooldown(word, attempt)
+                    t0 = time.time()
+                    reply, conv = client.chat(
+                        build_message(word, sentence, pos), model=MODEL,
+                        thinking=self.thinking,
+                        effort="low" if self.thinking else "",
+                    )
+                else:
+                    # After a 429, allow only one worker to leave the shared
+                    # cooldown and probe the service at a time.
+                    with self.retry_lock:
+                        self._wait_for_cooldown(word, attempt)
+                        t0 = time.time()
+                        reply, conv = client.chat(
+                            build_message(word, sentence, pos), model=MODEL,
+                            thinking=self.thinking,
+                            effort="low" if self.thinking else "",
+                        )
                 latency = round(time.time() - t0, 1)
                 path = save_result(
                     self.out, word, sentence, pos,
                     reply, latency, conv, self.mode,
                 )
-                self._note(word, "done", f"{os.path.basename(path)} ({latency}s)")
-                print(f"[完成] {word} -> {os.path.basename(path)} ({latency}s)",
+                with self.lock:
+                    self.rate_limit_attempts = 0
+                info = f"{os.path.basename(path)} ({latency}s)"
+                self._note(word, "done", info)
+                self._update_task(word, status="done", info=info,
+                                  attempt=attempt, next_retry_at=None)
+                print(f"[DONE] {word} -> {os.path.basename(path)} ({latency}s)",
                       flush=True)
                 return
             except RuntimeError as e:
                 msg = str(e)
-                if "触发限流" in msg and attempt == 1:
-                    wait = self._reset_wait(msg)
-                    print(f"[限流] {word}: {msg}，休眠 {wait // 60} 分钟后重试",
+                if "HTTP 429" in msg:
+                    wait, retry_at = self._set_cooldown(msg)
+                    self._update_task(word, status="waiting", info=msg,
+                                      attempt=attempt, next_retry_at=retry_at)
+                    print(f"[RATE LIMITED] {word}: {msg}; attempt {attempt}; "
+                          f"next retry at {retry_at} (in {wait / 60:.1f} minutes)",
                           flush=True)
-                    time.sleep(wait)
                     continue
                 self._note(word, "failed", msg[:120])
-                print(f"[失败] {word}: {msg[:120]}", flush=True)
+                self._update_task(word, status="failed", info=msg[:120],
+                                  attempt=attempt)
+                print(f"[FAILED] {word}: {msg[:120]}", flush=True)
                 return
             except Exception as e:
                 msg = f"{type(e).__name__}: {e}"
                 self._note(word, "failed", msg[:120])
-                print(f"[失败] {word}: {msg[:120]}", flush=True)
+                self._update_task(word, status="failed", info=msg[:120],
+                                  attempt=attempt)
+                print(f"[FAILED] {word}: {msg[:120]}", flush=True)
                 return
 
+    def _wait_for_cooldown(self, word, attempt):
+        with self.lock:
+            remaining = self.cooldown_until - time.time()
+            retry_at = time.strftime("%Y-%m-%d %H:%M:%S",
+                                     time.localtime(self.cooldown_until))
+        if remaining > 0:
+            print(f"[WAITING] {word}: attempt {attempt}; shared cooldown until "
+                  f"{retry_at} ({remaining / 60:.1f} minutes remaining)", flush=True)
+            time.sleep(remaining)
+
+    def _set_cooldown(self, msg):
+        with self.lock:
+            self.rate_limit_attempts += 1
+            wait = self._reset_wait(msg, self.rate_limit_attempts)
+            self.cooldown_until = max(self.cooldown_until, time.time() + wait)
+            deadline = self.cooldown_until
+        retry_at = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(deadline))
+        return max(0.0, deadline - time.time()), retry_at
+
     @staticmethod
-    def _reset_wait(msg: str) -> float:
+    def _reset_wait(msg: str, attempt: int = 1) -> float:
         m = RESET_RE.search(msg)
-        if not m:
-            return 600.0
-        target = time.mktime(time.strptime(m.group(1), "%Y-%m-%d %H:%M"))
-        return max(60.0, target - time.time() + 60)
+        if m:
+            target = time.mktime(time.strptime(m.group(1), "%Y-%m-%d %H:%M"))
+            base = max(60.0, target - time.time() + 60)
+        else:
+            base = min(3600.0, 600.0 * (2 ** min(max(attempt - 1, 0), 3)))
+        return base + random.uniform(5.0, 30.0)
 
     def _note(self, word, status, info):
         with self.lock:
             self.stats[status] += 1
             self.results.append((word, status, info))
+
+    def _update_task(self, word, **changes):
+        if not self.state_path:
+            return
+        with self.lock:
+            task = self.task_states.setdefault(word.casefold(), {"word": word})
+            task.update(changes)
+            self._write_state_locked("running")
+
+    def _write_state_locked(self, status):
+        if not self.state_path:
+            return
+        tasks = list(self.task_states.values())
+        atomic_write_json(self.state_path, {
+            "status": status,
+            "pid": os.getpid() if status == "running" else None,
+            "started_at": self.started_at,
+            "updated_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "total": len(tasks),
+            "completed": sum(t.get("status") in ("done", "skipped") for t in tasks),
+            "tasks": tasks,
+        })
 
     # -- 交互式 ------------------------------------------------------------
     def interactive(self):
@@ -324,8 +424,8 @@ class Runner:
         if not rows:
             return
         s = self.stats
-        print(f"\n===== 汇总: 完成 {s['done']} / 失败 {s['failed']} / "
-              f"跳过 {s['skipped']} =====")
+        print(f"\n===== Summary: done {s['done']} / failed {s['failed']} / "
+              f"skipped {s['skipped']} =====")
         marks = {"done": "+", "failed": "x", "skipped": "-"}
         for word, status, info in rows:
             print(f"  [{marks[status]}] {word}: {info}")
@@ -333,7 +433,7 @@ class Runner:
     # -- 批量 --------------------------------------------------------------
     def batch(self, path):
         if not os.path.isfile(path):
-            sys.exit(f"批量文件不存在: {path}")
+            sys.exit(f"Batch file does not exist: {path}")
         tasks = []
         with open(path, encoding="utf-8") as f:
             for i, line in enumerate(f, 1):
@@ -343,20 +443,30 @@ class Runner:
                 try:
                     tasks.append(parse_line(line))
                 except ValueError:
-                    print(f"[忽略] 第 {i} 行格式错误: {line[:60]}")
+                    print(f"[IGNORED] Invalid format on line {i}: {line[:60]}")
         if not tasks:
-            sys.exit("批量文件中没有有效任务")
+            sys.exit("The batch file contains no valid tasks")
+        with self.lock:
+            self.task_states = {
+                word.casefold(): {"word": word, "sentence": sentence, "pos": pos,
+                                  "status": "pending", "attempt": 0}
+                for word, sentence, pos in tasks
+            }
+            self._write_state_locked("running")
         for t in tasks:
             self.q.put(t)
-        print(f"已入队 {len(tasks)} 个任务（{MODEL} {self.mode}，"
-              f"并发 {self.concurrency}）", flush=True)
+        print(f"Queued {len(tasks)} tasks ({MODEL} {self.mode}, "
+              f"concurrency {self.concurrency})", flush=True)
         self.q.join()
         for _ in self.workers:
             self.q.put(None)
         for t in self.workers:
             t.join(timeout=5)
         self.summary()
-        return self.stats["failed"] == 0
+        succeeded = self.stats["failed"] == 0
+        with self.lock:
+            self._write_state_locked("done" if succeeded else "failed")
+        return succeeded
 
 
 def main():
@@ -376,14 +486,15 @@ def main():
     ap.add_argument("--concurrency", type=int, default=2,
                     help="worker 数量（默认 2，不建议超过 3）")
     ap.add_argument("--force", action="store_true",
-                    help="对已有输出的词重新生成")
+                    help="regenerate words that already have output")
+    ap.add_argument("--state", help="JSON job-state file for batch progress")
     ap.add_argument("--glow", action="store_true",
                     help="单发模式：结束后用 glow 显示保存的文件")
     args = ap.parse_args()
 
     if args.file:
         runner = Runner(args.concurrency, args.out, args.config,
-                        args.thinking, args.force)
+                        args.thinking, args.force, args.state)
         runner.start()
         if not runner.batch(args.file):
             raise SystemExit(1)
@@ -400,7 +511,7 @@ def main():
                    args.thinking, use_glow=args.glow)
     else:
         runner = Runner(args.concurrency, args.out, args.config,
-                        args.thinking, args.force)
+                        args.thinking, args.force, args.state)
         runner.start()
         runner.interactive()
 

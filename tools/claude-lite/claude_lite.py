@@ -294,7 +294,8 @@ class ClaudeLite:
             except Exception:
                 pass
             raise RuntimeError(
-                f"触发限流（HTTP 429），配额重置时间约: {reset or '未知'}"
+                f"Rate limited (HTTP 429); approximate quota reset: "
+                f"{reset or 'unknown'}"
             )
         if resp.status_code != 200:
             body = ""
