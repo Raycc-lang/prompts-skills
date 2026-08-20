@@ -209,6 +209,15 @@ class Runner:
         self.cooldown_until = 0.0
         self.rate_limit_attempts = 0
         self.retry_lock = threading.Lock()
+        # 主动节流（方案 B）：在每个请求前强制间隔，避免突发触发 429。
+        # 所有 worker 共享一个"上次请求时刻"，保证全局请求速率平缓。
+        self.throttle_lock = threading.Lock()
+        self.last_request_at = 0.0
+        # 每个对外请求的最小间隔（秒）。并发 n 时，n 个 worker 会交错等待，
+        # 实际总体速率被压到约 1/间隔 个请求/秒，从源头避开 claude.ai 限流。
+        self.REQUEST_INTERVAL = 12.0
+        # 跳过节流（交互式单发等低频场景不想等太久时可置 True）
+        self.throttle_enabled = state_path is not None
         self.state_path = state_path
         self.task_states = {}
         self.started_at = time.strftime("%Y-%m-%dT%H:%M:%S")
@@ -251,6 +260,7 @@ class Runner:
             try:
                 if attempt == 1:
                     self._wait_for_cooldown(word, attempt)
+                    self._throttle(word)
                     t0 = time.time()
                     reply, conv = client.chat(
                         build_message(word, sentence, pos), model=MODEL,
@@ -262,6 +272,7 @@ class Runner:
                     # cooldown and probe the service at a time.
                     with self.retry_lock:
                         self._wait_for_cooldown(word, attempt)
+                        self._throttle(word)
                         t0 = time.time()
                         reply, conv = client.chat(
                             build_message(word, sentence, pos), model=MODEL,
@@ -304,6 +315,31 @@ class Runner:
                                   attempt=attempt)
                 print(f"[FAILED] {word}: {msg[:120]}", flush=True)
                 return
+
+    def _throttle(self, label=""):
+        """主动节流：保证相邻两个对外请求之间至少有 REQUEST_INTERVAL 秒。
+
+        用锁让所有 worker 共享 last_request_at，实现"全局"匀速，
+        从源头压平请求尖峰，尽量避免触发 claude.ai 的 429 限流。
+        若服务端已处于限流 cooldown（slept 过），则跳过额外等待。
+        """
+        if not self.throttle_enabled:
+            return 0.0
+        with self.throttle_lock:
+            now = time.time()
+            wait = max(0.0, self.last_request_at + self.REQUEST_INTERVAL - now)
+            if wait > 0:
+                # 预约下一个请求时刻，并在释放锁后 sleep，避免锁占用太久
+                self.last_request_at = now + self.REQUEST_INTERVAL
+                coop = self.REQUEST_INTERVAL
+            else:
+                self.last_request_at = now
+                coop = self.REQUEST_INTERVAL
+        if wait > 0:
+            tag = f" {label}" if label else ""
+            print(f"[THROTTLE]{tag} waiting {wait:.1f}s", flush=True)
+            time.sleep(wait)
+        return wait
 
     def _wait_for_cooldown(self, word, attempt):
         with self.lock:
@@ -483,8 +519,8 @@ def main():
     ap.add_argument("--config", default=DEFAULT_CONFIG, help="客户端配置文件")
     ap.add_argument("--thinking", action="store_true",
                     help="开启思考模式（默认关闭，effort=low）")
-    ap.add_argument("--concurrency", type=int, default=2,
-                    help="worker 数量（默认 2，不建议超过 3）")
+    ap.add_argument("--concurrency", type=int, default=1,
+                    help="worker 数量（默认 1，避免频繁触发 429 限流）")
     ap.add_argument("--force", action="store_true",
                     help="regenerate words that already have output")
     ap.add_argument("--state", help="JSON job-state file for batch progress")

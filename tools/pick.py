@@ -927,7 +927,7 @@ def free_port(preferred):
 
 def main():
     ap=argparse.ArgumentParser(description="Browser reading workflow: select -> learn -> deep read")
-    ap.add_argument("-d", "--day"); ap.add_argument("--port", type=int, default=8009); ap.add_argument("--no-run", action="store_true"); ap.add_argument("--concurrency", type=int, default=2); ap.add_argument("--no-browser", action="store_true")
+    ap.add_argument("-d", "--day"); ap.add_argument("--port", type=int, default=8009); ap.add_argument("--no-run", action="store_true"); ap.add_argument("--concurrency", type=int, default=1); ap.add_argument("--no-browser", action="store_true")
     args=ap.parse_args(); day_dir=resolve_day_dir(args.day)
     with open(os.path.join(day_dir, "article.txt"), encoding="utf-8") as f: text=f.read()
     server=PickServer(render_page(text, not args.no_run), day_dir, not args.no_run, args.concurrency)
