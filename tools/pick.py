@@ -56,8 +56,34 @@ def load_json(path):
 def process_is_running(pid):
     if not isinstance(pid, int) or pid <= 0:
         return False
+    if os.name == "nt":
+        # Windows: os.kill(pid, 0) is unreliable — it raises WinError 5
+        # (Access denied) for processes we lack permission to signal, even
+        # when they are alive, and is easily misinterpreted as dead.
+        # Use OpenProcess(SYNCHRONIZE) + GetExitCodeProcess(STILL_ACTIVE)
+        # which works for alive processes without needing rights to kill.
+        import ctypes
+        STILL_ACTIVE = 259
+        PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+        k32 = ctypes.windll.kernel32
+        handle = k32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION,
+                                 False, pid)
+        if not handle:
+            return False
+        try:
+            code = ctypes.c_ulong()
+            ok = k32.GetExitCodeProcess(handle, ctypes.byref(code))
+            if not ok:
+                return False
+            return code.value == STILL_ACTIVE
+        finally:
+            k32.CloseHandle(handle)
     try:
         os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:
+        return True
     except OSError:
         return False
     return True
