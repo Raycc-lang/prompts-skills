@@ -54,8 +54,11 @@ except ImportError:
     _HAS_RICH = False
 
 MODEL = "claude-sonnet-4-6"
+# 使用去掉了 "## End" 部分的协议副本：生成的 worksheet 不再附带
+# TARGET MEANING 总结 / "Next meaning to study" 这类非答案信息。
 PROMPT_PATH = os.path.join(
-    ROOT, "prompts", "English-learning", "Single-Meaning Discrimination Protocol.md"
+    ROOT, "prompts", "English-learning",
+    "Single-Meaning Discrimination Protocol (no End section).md"
 )
 DEFAULT_OUT = os.path.join(ROOT, "smd-output")
 DEFAULT_CONFIG = os.path.join(SCRIPT_DIR, "claude-lite", "claude_config.json")

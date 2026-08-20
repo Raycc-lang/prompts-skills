@@ -14,7 +14,7 @@ sys.path.insert(0, str(TOOLS))
 import daily
 import prep
 import smd
-import pick
+import reading
 
 
 class ReadingToolTests(unittest.TestCase):
@@ -24,7 +24,7 @@ class ReadingToolTests(unittest.TestCase):
         ), patch.object(daily, "run", return_value=0) as run:
             daily.main()
         command = run.call_args.args[0]
-        self.assertEqual(command[-1], str(TOOLS / "pick.py"))
+        self.assertEqual(command[-1], str(TOOLS / "reading.py"))
 
     def test_batch_main_returns_failure_when_runner_reports_failed_tasks(self):
         class FakeRunner:
@@ -88,36 +88,36 @@ class ReadingToolTests(unittest.TestCase):
             self.assertEqual(smd.Runner._reset_wait("HTTP 429", 4), 3600)
 
     def test_detached_launch_configuration(self):
-        config = pick.detached_popen_kwargs()
+        config = reading.detached_popen_kwargs()
         if os.name == "nt":
-            expected = (pick.subprocess.CREATE_NEW_PROCESS_GROUP |
-                        pick.subprocess.DETACHED_PROCESS)
+            expected = (reading.subprocess.CREATE_NEW_PROCESS_GROUP |
+                        reading.subprocess.DETACHED_PROCESS)
             self.assertEqual(config["creationflags"], expected)
         else:
             self.assertTrue(config["start_new_session"])
 
     def test_detached_command_forces_utf8_and_writes_state(self):
         with tempfile.TemporaryDirectory() as day, patch.object(
-            pick.subprocess, "Popen"
+            reading.subprocess, "Popen"
         ) as popen:
             popen.return_value.pid = 321
-            server = pick.PickServer("page", day, True, 2)
+            server = reading.ReadingServer("page", day, True, 2)
             server.submit([{"word": "alpha", "sentence": "An alpha."}])
             command = popen.call_args.args[0]
             kwargs = popen.call_args.kwargs
-            state = json.loads(Path(day, pick.JOB_STATE_NAME).read_text(
+            state = json.loads(Path(day, reading.JOB_STATE_NAME).read_text(
                 encoding="utf-8"
             ))
         self.assertEqual(command[1:3], ["-X", "utf8"])
-        self.assertIs(kwargs["stdin"], pick.subprocess.DEVNULL)
-        self.assertIs(kwargs["stderr"], pick.subprocess.STDOUT)
+        self.assertIs(kwargs["stdin"], reading.subprocess.DEVNULL)
+        self.assertIs(kwargs["stderr"], reading.subprocess.STDOUT)
         self.assertIsNone(state["pid"])
         self.assertEqual(state["status"], "starting")
         self.assertEqual(state["tasks"][0]["word"], "alpha")
 
     def test_reload_switches_all_day_scoped_paths(self):
         with tempfile.TemporaryDirectory() as root, patch.object(
-            pick, "READING_DIR", root
+            reading, "READING_DIR", root
         ):
             old_day = Path(root, "2026-08-18")
             new_day = Path(root, "2026-08-19")
@@ -125,13 +125,13 @@ class ReadingToolTests(unittest.TestCase):
             new_day.mkdir()
             Path(new_day, "article.txt").write_text(
                 "New article", encoding="utf-8")
-            server = pick.PickServer("old page", str(old_day), True, 2)
+            server = reading.ReadingServer("old page", str(old_day), True, 2)
             ok, day = server.reload("2026-08-19")
         self.assertTrue(ok)
         self.assertEqual(day, "2026-08-19")
         self.assertEqual(server.day_dir, str(new_day.resolve()))
-        self.assertEqual(server.state_path, str(new_day / pick.JOB_STATE_NAME))
-        self.assertEqual(server.log_path, str(new_day / pick.SMD_LOG_NAME))
+        self.assertEqual(server.state_path, str(new_day / reading.JOB_STATE_NAME))
+        self.assertEqual(server.log_path, str(new_day / reading.SMD_LOG_NAME))
         self.assertIn("New article", server.page_html)
 
     def test_atomic_state_writes_use_distinct_temporary_files(self):
@@ -144,9 +144,9 @@ class ReadingToolTests(unittest.TestCase):
                 Path(target).write_bytes(Path(source).read_bytes())
                 Path(source).unlink()
 
-            with patch.object(pick.os, "replace", side_effect=record_replace):
-                pick.atomic_write_json(path, {"writer": 1})
-                pick.atomic_write_json(path, {"writer": 2})
+            with patch.object(reading.os, "replace", side_effect=record_replace):
+                reading.atomic_write_json(path, {"writer": 1})
+                reading.atomic_write_json(path, {"writer": 2})
             self.assertEqual(len(set(sources)), 2)
             self.assertTrue(all(Path(source).parent == Path(directory)
                                 for source in sources))
@@ -160,10 +160,10 @@ class ReadingToolTests(unittest.TestCase):
                 "tasks": [{"word": "alpha", "status": "done"},
                           {"word": "beta", "status": "done"}],
             }
-            Path(day, pick.JOB_STATE_NAME).write_text(
+            Path(day, reading.JOB_STATE_NAME).write_text(
                 json.dumps(state), encoding="utf-8"
             )
-            server = pick.PickServer("page", day, True, 2)
+            server = reading.ReadingServer("page", day, True, 2)
             payload = server.status_payload()
         self.assertEqual(server.selected_words, ["alpha", "beta"])
         self.assertEqual(payload["status"], "done")
@@ -171,14 +171,14 @@ class ReadingToolTests(unittest.TestCase):
 
     def test_active_saved_job_prevents_duplicate_submission(self):
         with tempfile.TemporaryDirectory() as day, patch.object(
-            pick, "process_is_running", return_value=True
+            reading, "process_is_running", return_value=True
         ):
-            Path(day, pick.JOB_STATE_NAME).write_text(json.dumps({
+            Path(day, reading.JOB_STATE_NAME).write_text(json.dumps({
                 "status": "running", "pid": 123,
                 "tasks": [{"word": "alpha", "status": "running"}],
             }), encoding="utf-8")
-            server = pick.PickServer("page", day, True, 2)
-            with self.assertRaises(pick.SubmissionInProgressError):
+            server = reading.ReadingServer("page", day, True, 2)
+            with self.assertRaises(reading.SubmissionInProgressError):
                 server.submit([{"word": "beta"}])
 
     def test_result_names_do_not_collide(self):

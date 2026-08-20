@@ -8,7 +8,7 @@
     python daily.py --skip-prep        # 今天已有 article.txt,直接打开工作流
     python daily.py --only-read        # 直接打开今天的浏览器工作流
 
-流程: prep(可选) -> pick 浏览器工作流（点选 -> 学词 -> 深度阅读）
+流程: prep(可选) -> reading 浏览器工作流（点选 -> 学词 -> 深度阅读）
 提交选词后，SMD 在服务器后台运行，完成后页面自动显示学习内容。
 """
 
@@ -75,7 +75,7 @@ def main():
             print(f"检测到已有服务在 127.0.0.1:8009，直接打开浏览器", flush=True)
             webbrowser.open("http://127.0.0.1:8009/")
             return 0
-        return run([sys.executable, os.path.join(SCRIPT_DIR, "pick.py")])
+        return run([sys.executable, os.path.join(SCRIPT_DIR, "reading.py")])
 
     if args.cmd:
         prep_cmd = [sys.executable, os.path.join(SCRIPT_DIR, "prep.py"),
@@ -102,7 +102,7 @@ def main():
     service_running = sock.connect_ex(("127.0.0.1", 8009)) == 0
     sock.close()
     if service_running:
-        # 刷新服务内容，让 pick 重新读取 article.txt
+        # 刷新服务内容，让 reading 重新读取 article.txt
         print("检测到已有服务，发送 /reload 刷新内容...", flush=True)
         if reload_service(today_dir):
             print("服务已刷新，新内容已加载", flush=True)
@@ -111,10 +111,10 @@ def main():
         print("已有端口未能加载今天的阅读内容", flush=True)
         return 1
 
-    pick_cmd = [sys.executable, os.path.join(SCRIPT_DIR, "pick.py")]
+    read_cmd = [sys.executable, os.path.join(SCRIPT_DIR, "reading.py")]
     if args.no_run:
-        pick_cmd.append("--no-run")
-    return run(pick_cmd)
+        read_cmd.append("--no-run")
+    return run(read_cmd)
 
 
 if __name__ == "__main__":

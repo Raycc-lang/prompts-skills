@@ -238,6 +238,85 @@ def markdown_to_html(markdown):
 ANSWER_HEADING_RE = re.compile(r"^\s*#{1,6}\s+.*answer\s*key\s*$", re.I)
 ITEM_RE = re.compile(r"^\s*(?:\*\*|__)?([VJS]\d+)[.:]?(?:\*\*|__)?[.:]?\s*(.*)$", re.I)
 ANSWER_ITEM_RE = re.compile(r"^\s*(?:\*\*|__)?([VJS]\d+)\s*[—–-]\s*(.*?)(?:\*\*|__)?\s*$", re.I)
+# Trailing bookkeeping after the answer key: a section headed "## End",
+# "## Summary", or "## TARGET MEANING in one sentence" (or just bare recap
+# lines) holding the TARGET MEANING recap and "Next meaning to study" note.
+END_HEADING_RE = re.compile(
+    r"^\s*#{1,6}\s+(End|Summary|TARGET MEANING in one sentence)\s*$", re.I)
+RECAP_LINE_RE = re.compile(
+    r"^\s*\*{1,2}`?(?:TARGET MEANING|Next meaning to study)\b", re.I)
+
+
+def strip_end_section(markdown):
+    """Drop the trailing bookkeeping (TARGET MEANING recap and \"Next meaning
+    to study\"). New worksheets are generated without it; this keeps the
+    archive from older prompts displaying cleanly too."""
+    lines = markdown.splitlines()
+    answer_at = None
+    for index, line in enumerate(lines):
+        if ANSWER_HEADING_RE.match(line):
+            answer_at = index + 1
+    cut = None
+    # Scan after the answer key, so the sense-map "TARGET MEANING: sense N"
+    # marker (which lives before the answers) is never touched. Without an
+    # answer key, only cut on a bookkeeping heading.
+    wanted = (END_HEADING_RE.match, RECAP_LINE_RE.match) if answer_at is not None \
+        else (END_HEADING_RE.match,)
+    for index in range(answer_at or 0, len(lines)):
+        if not any(match(lines[index]) for match in wanted):
+            continue
+        # Only cut when nothing quiz-like follows: the rest must be bookkeeping.
+        if not any(ITEM_RE.match(x.strip()) for x in lines[index + 1:]):
+            cut = index
+            break
+    if cut is not None:
+        lines = lines[:cut]
+    while lines and lines[-1].strip() in ("", "---"):
+        lines.pop()
+    return "\n".join(lines)
+
+
+def extract_gloss(markdown):
+    """One-line reminder of the target meaning, for the deep-reading popup.
+
+    Sources, in order: the recap line (\"**TARGET MEANING of ...**\",
+    \"**TARGET MEANING in one sentence:**\", \"**TARGET MEANING:**\" — gloss
+    on the same or the next line), the sense-map \"TARGET MEANING: sense N\"
+    marker, then the Section 3 definition line (the only one present in
+    worksheets generated without an End section).
+    """
+    raw = ""
+    patterns = (
+        r"^\s*\*\*`?TARGET MEANING`? of[^:]*:\*\*\s*(.+?)\s*$",
+        r"^\s*\*\*`?TARGET MEANING`?(?:\s+in one sentence)?\s*:\*\*\s*(.+?)\s*$",
+        r"^\s*\*\*`?TARGET MEANING`?[^*]*\*\*\s*[—–-]\s*(.+?)\s*$",
+        r"\([^()]*TARGET MEANING[^()]*\)\s*[:：]\s*(.+?)\s*$",
+    )
+    for pattern in patterns:
+        match = re.search(pattern, markdown, re.M)
+        if match:
+            raw = match.group(1)
+            break
+    if not raw:
+        # Label-only line or heading: the gloss sits on the next line.
+        match = re.search(
+            r"(?im)^\s*(?:\*\*`?TARGET MEANING`?(?:\s+in one sentence)?\s*:\*\*|"
+            r"#{1,6}\s+TARGET MEANING in one sentence)\s*$", markdown)
+        if match:
+            for line in markdown[match.end():].splitlines():
+                if line.strip() and line.strip() != "---":
+                    raw = line.strip()
+                    break
+    if not raw:
+        return ""
+    gloss = re.sub(r"[*_`]", "", raw)
+    # "Coarse, in this meaning, describes ..." -> "describes ..."
+    gloss = re.sub(r"^[\w' -]+?,\s*in (?:this|the)(?:\s+\w+)?\s+meaning,\s*",
+                   "", gloss)
+    gloss = re.split(r"\s+[—–-]\s+|(?<=\.)\s", gloss)[0].strip()
+    if len(gloss) > 180:
+        gloss = gloss[:177].rstrip() + "…"
+    return gloss
 
 
 def split_answer_key(markdown):
@@ -287,7 +366,7 @@ def parse_answers(lines):
 
 def render_learning_content(markdown):
     """Render all non-answer content and replace each practice item in place."""
-    body_lines, answer_lines = split_answer_key(markdown)
+    body_lines, answer_lines = split_answer_key(strip_end_section(markdown))
     answers = parse_answers(answer_lines)
     questions = []
     output = []
@@ -334,7 +413,36 @@ def render_learning_content(markdown):
     return "\n".join(output), questions
 
 
-def article_html(text, selectable=True):
+REFLOW_LINE_MAX = 72
+TERMINAL_LINE_RE = re.compile(r'[.!?…\u2026]["“”\'’)\]]*$')
+
+
+def reflow_paragraphs(text):
+    """Repair lost paragraph breaks from plain-text exports.
+
+    When every line in a block is short (<= REFLOW_LINE_MAX chars) and ends
+    with terminal punctuation, the block almost certainly came from a source
+    where each paragraph was written as a single line that lost its blank-line
+    separator -- treat each line as its own paragraph. Anything else (headings,
+    long wrapped lines, mixed blocks) is joined with a space as one paragraph.
+    """
+    blocks = []
+    for raw in text.split("\n\n"):
+        lines = [ln.strip() for ln in raw.splitlines()]
+        lines = [ln for ln in lines if ln]
+        if not lines:
+            continue
+        if len(lines) > 1 and all(len(ln) <= REFLOW_LINE_MAX
+                                  and TERMINAL_LINE_RE.search(ln) for ln in lines):
+            blocks.extend(lines)
+        else:
+            blocks.append(" ".join(lines))
+    return "\n\n".join(blocks)
+
+
+def article_html(text, selectable=True, tracked=False, reflow=False):
+    if reflow:
+        text = reflow_paragraphs(text)
     parts, pos = [], 0
     for match in WORD_RE.finditer(text):
         parts.append(html.escape(text[pos:match.start()]))
@@ -344,6 +452,11 @@ def article_html(text, selectable=True):
             parts.append(f'<span class="w" data-word="{html.escape(word, quote=True)}" '
                          f'data-lower="{html.escape(word.lower(), quote=True)}" '
                          f'data-sent="{html.escape(sentence, quote=True)}">{html.escape(word)}</span>')
+        elif tracked:
+            # Deep reading: inert token the JS can highlight once it knows
+            # which words have worksheets.
+            parts.append(f'<span class="dw" data-lower="{html.escape(word.lower(), quote=True)}">'
+                         f'{html.escape(word)}</span>')
         else:
             parts.append(html.escape(word))
         pos = match.end()
@@ -426,6 +539,24 @@ code { background:var(--soft); padding:2px 4px; border-radius:3px; }
 #toast.show { opacity:.94; visibility:visible; transform:translate(-50%,0); }
 @media (max-width:1000px) { .layout { grid-template-columns:minmax(32px,1fr) minmax(0,1fr) 270px; } #sidebar { width:270px; } #article { padding-inline:32px; } }
 @media (max-width:760px) { .layout { display:block; } #article { padding:28px 22px 120px; } #sidebar { position:static; width:100%; height:auto; border-left:0; border-top:1px solid var(--line); } .panel { padding:28px 20px 80px; } .word-nav { grid-template-columns:1fr 1fr; } .word-jump-group { grid-column:1/-1; grid-row:1; } .word-nav button { grid-row:2; } }
+
+/* --- Deep reading phase --- */
+.deep-head { display:flex; align-items:baseline; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+.deep-tools { display:flex; align-items:center; gap:8px; font:13px ui-sans-serif,system-ui,sans-serif; color:var(--muted); }
+.deep-tools button { padding:5px 11px; border:1px solid var(--line); border-radius:6px; background:var(--soft); color:var(--ink); font-size:14px; }
+#known-count { white-space:nowrap; }
+#deep-article { max-width:38rem; margin:34px auto 0; font-family:Georgia,'Times New Roman',serif; font-size:var(--deep-size,20px); line-height:1.9; }
+#deep-article p { margin:0 0 1.6em; text-wrap:pretty; }
+#deep-article p:last-child { margin-bottom:0; }
+.dw.known { background:rgba(255,213,74,.16); border-bottom:1.5px solid rgba(200,150,20,.65); border-radius:2px; cursor:pointer; }
+.dw.known:hover { background:rgba(255,213,74,.34); }
+#gloss-pop { position:absolute; z-index:30; width:min(330px,calc(100vw - 24px)); background:var(--paper); color:var(--ink); border:1px solid var(--line); border-radius:10px; box-shadow:0 10px 32px rgba(0,0,0,.22); padding:13px 15px; font:14px/1.55 ui-sans-serif,system-ui,sans-serif; }
+#gloss-pop .gp-word { font-weight:700; font-size:15px; }
+#gloss-pop .gp-gloss { margin-top:3px; }
+#gloss-pop .gp-empty { margin-top:3px; color:var(--muted); }
+#gloss-pop button { margin-top:10px; padding:6px 10px; border:1px solid var(--line); border-radius:6px; background:var(--soft); color:var(--ink); font-size:13px; }
+#read-progress { position:fixed; top:0; left:0; z-index:40; height:3px; width:0; background:var(--accent); opacity:0; transition:opacity .2s; pointer-events:none; }
+body.deep-active #read-progress { opacity:1; }
 """
 
 PAGE_JS = r"""
@@ -485,8 +616,12 @@ function showPhase(name) {
   phase = name;
   document.querySelectorAll('.phase').forEach(node => node.classList.toggle('active', node.id === name + '-phase'));
   document.querySelectorAll('.phase-nav button').forEach(node => node.classList.toggle('active', node.dataset.phase === name));
+  document.body.classList.toggle('deep-active', name === 'deep');
+  hideGlossPop();
   if (name === 'learn' && pollTimer === null) pollStatus();
   window.scrollTo({top:0, behavior:'auto'});
+  updateReadProgress();
+  setProgressPolling(name === 'deep');
 }
 function quizKey(sheet, question) {
   return sheet.word + ':' + question.id;
@@ -604,6 +739,7 @@ async function pollStatus() {
     const response = await fetch('/status', {cache:'no-store'});
     const data = await response.json();
     if (data.worksheets) renderWorksheets(data);
+    if (data.glossary) applyGlossary(data);
     if (!sel.size && data.tasks?.length) {
       data.tasks.forEach(task => {
         const lower = task.word.toLowerCase();
@@ -676,15 +812,94 @@ $('submit').onclick = async () => {
     toast('Submission failed: ' + error);
   }
 };
+
+// --- Deep reading: studied-word highlighting, gloss popup, progress, font size ---
+let glossary = new Map();
+const glossPop = $('gloss-pop');
+function hideGlossPop() { if (glossPop) glossPop.hidden = true; }
+function applyGlossary(data) {
+  glossary = new Map((data.glossary || []).map(entry => [entry.lower, entry]));
+  let hits = 0;
+  document.querySelectorAll('#deep-article .dw').forEach(span => {
+    const known = glossary.has(span.dataset.lower);
+    span.classList.toggle('known', known);
+    if (known) hits += 1;
+  });
+  const counter = $('known-count');
+  if (counter) {
+    counter.textContent = glossary.size
+      ? glossary.size + ' studied · ' + hits + ' highlighted'
+      : '';
+  }
+}
+document.querySelectorAll('#deep-article .dw').forEach(span => {
+  span.addEventListener('click', () => {
+    const entry = glossary.get(span.dataset.lower);
+    if (!entry) return;
+    glossPop.innerHTML = '<div class="gp-word">' + esc(entry.word) + '</div>' +
+      (entry.gloss
+        ? '<div class="gp-gloss">' + esc(entry.gloss) + '</div>'
+        : '<div class="gp-empty">No short gloss found — open the worksheet for the full notes.</div>') +
+      '<button type="button">Open worksheet →</button>';
+    glossPop.querySelector('button').onclick = () => {
+      hideGlossPop();
+      worksheetIndex = Math.min(entry.index, Math.max(0, worksheets.length - 1));
+      renderCurrentWorksheet();
+      showPhase('learn');
+    };
+    const rect = span.getBoundingClientRect();
+    if (!rect.width) return; // hidden while another phase is active
+    const maxLeft = window.scrollX + document.documentElement.clientWidth - 344;
+    glossPop.style.left = Math.max(window.scrollX + 8,
+      Math.min(rect.left + window.scrollX, maxLeft)) + 'px';
+    glossPop.style.top = (rect.bottom + window.scrollY + 6) + 'px';
+    glossPop.hidden = false;
+  });
+});
+document.addEventListener('click', event => {
+  if (!glossPop.hidden && !glossPop.contains(event.target) &&
+      !(event.target.classList && event.target.classList.contains('dw'))) {
+    hideGlossPop();
+  }
+});
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape') hideGlossPop();
+});
+function updateReadProgress() {
+  const bar = $('read-progress');
+  if (!bar) return;
+  if (phase !== 'deep') { bar.style.width = '0'; return; }
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  bar.style.width = (max > 0 ? Math.min(100, window.scrollY / max * 100) : 0) + '%';
+}
+window.addEventListener('scroll', updateReadProgress, {passive:true});
+// Belt and braces: some environments throttle scroll events, so also poll
+// lightly while the deep phase is visible.
+let progressTimer = null;
+function setProgressPolling(on) {
+  clearInterval(progressTimer);
+  progressTimer = on ? setInterval(updateReadProgress, 300) : null;
+}
+let deepSize = Number(localStorage.getItem('deep-font-size')) || 20;
+function applyDeepSize() {
+  $('deep-article').style.setProperty('--deep-size', deepSize + 'px');
+  localStorage.setItem('deep-font-size', String(deepSize));
+}
+$('font-dec').onclick = () => { deepSize = Math.max(16, deepSize - 1); applyDeepSize(); };
+$('font-inc').onclick = () => { deepSize = Math.min(26, deepSize + 1); applyDeepSize(); };
+applyDeepSize();
+// Load any existing archive right away so the Learn and Deep phases are
+// populated even before the user visits them.
+pollStatus();
 """
 
 
 def render_page(text, run_smd):
     label = "Generate learning" if run_smd else "Write batch.txt"
-    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reading workflow</title><style>{PAGE_CSS}</style></head><body><div id="main"><nav class="phase-nav" aria-label="Reading phases"><button data-phase="select" class="active">1. Select</button><button data-phase="learn">2. Learn</button><button data-phase="deep">3. Deep reading</button></nav><section id="select-phase" class="phase active"><div class="layout"><div id="article">{article_html(text)}</div><aside id="sidebar"><h2>Selected <span id="count">0</span></h2><div id="addrow"><input id="add-input" type="text" placeholder="Add a word or phrase"><button id="add-btn" type="button">Add</button></div><div id="sel-list"></div><div id="actions"><button id="submit" type="button">{label}</button></div></aside></div></section><section id="learn-phase" class="phase"><div class="panel"><h1>Vocabulary learning</h1><div id="learn-status" class="status">Select words to start generation</div><div class="word-nav"><button class="prev-word" type="button" disabled>← Previous word</button><div class="word-jump-group"><label for="word-jump-top">Jump to</label><select id="word-jump-top" class="word-jump" aria-label="Jump to word"><option value="">No worksheets</option></select><span class="word-progress">0 words</span></div><button class="next-word" type="button" disabled>Next word →</button></div><div id="worksheets"><p class="empty">Your SMD worksheets will appear here</p></div><div class="word-nav word-nav-bottom"><button class="prev-word" type="button" disabled>← Previous word</button><div class="word-jump-group"><label for="word-jump-bottom">Jump to</label><select id="word-jump-bottom" class="word-jump" aria-label="Jump to word"><option value="">No worksheets</option></select><span class="word-progress">0 words</span></div><button class="next-word" type="button" disabled>Next word →</button></div><button class="continue-button" type="button" onclick="showPhase('deep')">Continue to deep reading →</button></div></section><section id="deep-phase" class="phase"><div class="panel"><h1>Deep Reading Phase</h1><p class="status">Read the article closely. Return to Select or Learn above whenever you need to review a word or answer.</p><div id="deep-article">{article_html(text, selectable=False)}</div></div></section></div><div id="toast"></div><script>{PAGE_JS}</script></body></html>'''
+    return f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Reading workflow</title><style>{PAGE_CSS}</style></head><body><div id="main"><nav class="phase-nav" aria-label="Reading phases"><button data-phase="select" class="active">1. Select</button><button data-phase="learn">2. Learn</button><button data-phase="deep">3. Deep reading</button></nav><section id="select-phase" class="phase active"><div class="layout"><div id="article">{article_html(text)}</div><aside id="sidebar"><h2>Selected <span id="count">0</span></h2><div id="addrow"><input id="add-input" type="text" placeholder="Add a word or phrase"><button id="add-btn" type="button">Add</button></div><div id="sel-list"></div><div id="actions"><button id="submit" type="button">{label}</button></div></aside></div></section><section id="learn-phase" class="phase"><div class="panel"><h1>Vocabulary learning</h1><div id="learn-status" class="status">Select words to start generation</div><div class="word-nav"><button class="prev-word" type="button" disabled>← Previous word</button><div class="word-jump-group"><label for="word-jump-top">Jump to</label><select id="word-jump-top" class="word-jump" aria-label="Jump to word"><option value="">No worksheets</option></select><span class="word-progress">0 words</span></div><button class="next-word" type="button" disabled>Next word →</button></div><div id="worksheets"><p class="empty">Your SMD worksheets will appear here</p></div><div class="word-nav word-nav-bottom"><button class="prev-word" type="button" disabled>← Previous word</button><div class="word-jump-group"><label for="word-jump-bottom">Jump to</label><select id="word-jump-bottom" class="word-jump" aria-label="Jump to word"><option value="">No worksheets</option></select><span class="word-progress">0 words</span></div><button class="next-word" type="button" disabled>Next word →</button></div><button class="continue-button" type="button" onclick="showPhase('deep')">Continue to deep reading →</button></div></section><section id="deep-phase" class="phase"><div class="panel"><div class="deep-head"><h1>Deep Reading</h1><div class="deep-tools"><span id="known-count"></span><button id="font-dec" type="button" title="Smaller text" aria-label="Smaller text">A−</button><button id="font-inc" type="button" title="Larger text" aria-label="Larger text">A+</button></div></div><p class="status">Read closely and slowly. Words you studied are highlighted — click one for a quick reminder, or jump to its worksheet.</p><div id="deep-article">{article_html(text, selectable=False, tracked=True, reflow=True)}</div></div></section></div><div id="gloss-pop" hidden></div><div id="read-progress"></div><div id="toast"></div><script>{PAGE_JS}</script></body></html>'''
 
 
-class PickServer:
+class ReadingServer:
     def __init__(self, page_html, day_dir, run_smd, concurrency):
         self.page_html, self.day_dir = page_html, day_dir
         self.run_smd, self.concurrency = run_smd, concurrency
@@ -818,7 +1033,9 @@ class PickServer:
                 with open(path, encoding="utf-8") as f: content=f.read()
                 word = re.sub(r"^# SMD:\s*", "", content.splitlines()[0]) if content else os.path.basename(path)
                 rendered, questions = render_learning_content(content)
-                sheets.append({"word": word, "html": rendered, "questions": questions})
+                sheets.append({"word": word, "html": rendered,
+                               "questions": questions,
+                               "gloss": extract_gloss(content)})
             except OSError: pass
         with self.lock:
             self._sheets_sig, self._sheets_cache = sig, sheets
@@ -862,6 +1079,11 @@ class PickServer:
                 "completed": completed, "archive_total": len(sheets),
                 "selected_words": selected_words,
                 "tasks": state.get("tasks", []),
+                "glossary": [{"word": sheet["word"],
+                              "lower": sheet["word"].strip().casefold(),
+                              "index": index,
+                              "gloss": sheet.get("gloss", "")}
+                             for index, sheet in enumerate(sheets)],
                 "worksheets": sheets}
 
     def submit(self, items):
@@ -930,7 +1152,7 @@ def main():
     ap.add_argument("-d", "--day"); ap.add_argument("--port", type=int, default=8009); ap.add_argument("--no-run", action="store_true"); ap.add_argument("--concurrency", type=int, default=1); ap.add_argument("--no-browser", action="store_true")
     args=ap.parse_args(); day_dir=resolve_day_dir(args.day)
     with open(os.path.join(day_dir, "article.txt"), encoding="utf-8") as f: text=f.read()
-    server=PickServer(render_page(text, not args.no_run), day_dir, not args.no_run, args.concurrency)
+    server=ReadingServer(render_page(text, not args.no_run), day_dir, not args.no_run, args.concurrency)
     port=free_port(args.port); httpd=ThreadingHTTPServer(("127.0.0.1", port), server.handler()); url=f"http://127.0.0.1:{port}/"
     print(f"Reading workflow: {url}", flush=True)
     if not args.no_browser: webbrowser.open(url)
