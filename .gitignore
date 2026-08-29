@@ -12,6 +12,7 @@ desktop.ini
 # Local / scratch
 .env
 .env.*
+.workbuddy/
 scratch/
 tmp/
 *.local.md
