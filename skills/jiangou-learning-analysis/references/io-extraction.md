@@ -1,6 +1,6 @@
 # Learning from Language Materials: Pipeline + Knowledge Extraction
 
-Entered from SKILL.md routing, AFTER step 0. Use for requests whose target is
+Entered from SKILL.md routing, AFTER gate 0. Use for requests whose target is
 learning knowledge FROM text, lecture, or video: "extract the knowledge," "help me
 study this chapter," "why can't I apply what I read."
 

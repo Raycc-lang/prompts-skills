@@ -18,6 +18,7 @@ templates/       Starting points for new skills and prompts
 | Skill | What it does |
 |---|---|
 | [`prompt-engineering`](skills/prompt-engineering/) | Create, improve, debug, grade, or evaluate prompts, system instructions, and skill files. |
+| [`skill-authoring`](skills/skill-authoring/) | Author, distill, revise, or diagnose agent skills, grounded in evidence for when skills help and why they fail. |
 | [`edit-my-writing`](skills/edit-my-writing/) | Edit English prose through ordered passes, then explain the changes so the edit is learnable. |
 | [`jiangou-learning-analysis`](skills/jiangou-learning-analysis/) | Analyze a learning goal, method, or material with the 渐构分析 framework. |
 | [`intensive-reading`](skills/intensive-reading/) | Decide whether a material deserves intensive reading and route it to the right session shape. |

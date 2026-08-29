@@ -39,7 +39,7 @@ say in one line which row you are in.
 | Fast, honest feedback available (compiler, test suite, coach, opponent, a listener who visibly doesn't understand) and the learner is still improving | Send them to the loop. Name the grader and a return condition. Don't spend the turn on structure the feedback will surface on its own. | progress stalls, one error class keeps recurring, or they can't tell why an attempt failed |
 | Same feedback, but plateaued or repeating one error class | Run the loop on that error class | this is the case for it |
 | Feedback slow, absent, or flattering — self-taught reading, theory, writing, judgment-heavy professional work | Run the loop. Here analysis substitutes for a missing error signal. | always |
-| A specific attempt just failed and can be described | Diagnosis routing; skip steps 1–6 | |
+| A specific attempt just failed and can be described | Diagnosis routing — skip the analysis loop and go to Part III | |
 | A text, lecture, or video in hand | io-extraction routing | |
 
 Return conditions are observations, not durations: "come back when the same error
