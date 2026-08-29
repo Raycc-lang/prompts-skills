@@ -1,6 +1,7 @@
 ---
 name: "edit-my-writing"
 description: "Edit English prose — email, cover letter, resume line, doc, post — through ordered passes, then explain the changes so the edit is learnable. Use when the user pastes prose and wants it tightened or diagnosed, or supplies an original plus their own edit for grading. For prompts, instructions, or skill files, use prompt-engineering instead."
+when_to_use: "When the user pastes English prose (email, cover letter, resume line, doc, post) and wants it edited, tightened, or diagnosed, or hands over an original plus their own edit to be graded — with an explanation of the changes as part of the deliverable. Not for prompts, instructions, or skill files (use prompt-engineering)."
 ---
 
 # Edit My Writing
@@ -245,31 +246,18 @@ Then one pattern to watch.
 
 ---
 
-## 9. Self-checks
+## 9. Pre-delivery checks
 
-- No fact, number, name, quotation, degree of certainty, or causal link changed. Compare the edit against the source specifically for this before returning.
-- No substitution made that required a fact you don't have.
-- Any premise you cut passed the could-it-be-false test, or the cut was flagged.
-- Every stated test is a real test; anything justified by taste sits under judgment calls.
-- Every judgment call names the condition that reverses it.
-- No section manufactured to satisfy the format. "Nothing to report" is a legal answer.
-- Any wording you *added* serves clarity, fidelity, correctness, or a stated user requirement.
-- No invented statistics. Never report a count or percentage you did not compute.
-- The Pass 6 universal checks were run, and Pass 0 fixed a target variety if idiom judgments were made.
+Only checks that produce evidence belong on this list. Register, voice, substitution choices, premise cuts, and format discipline are decided while the passes run (§1, §4–§6) and cannot be verified afterward by rereading your own output — so they are not listed here as if they were checks.
+
+1. **Fidelity check.** Every number, name, quotation, citation, unit, and defined term in the edited text must have a counterpart in the source. Anything without one is invented: delete it or flag it explicitly.
+2. **Computed counts.** Every count or percentage you report must be actually computed before you report it. If you did not count, do not report the number.
+
+**Full-ledger trigger.** Run the fidelity check as a complete item-by-item ledger only when the input is long (about 500 words or more) or the §1 domain caution applies. Otherwise check the substantive rewrites against the source directly — mechanical fixes (Pass 3, Pass 6) do not each need a line. Ledger procedure, table format, and a filled example: `references/verification.md`.
 
 ---
 
 ## 10. Worked micro-example
 
-> **Context inferred:** a short personal statement explaining why the writer wants to improve, general audience, US English. Stated because the judgment call below depends on it.
->
-> **In:** "As we all know, with the development of society, the communication skills has become a very important aspect, therefore I want to make an improvement to my writing ability." *(29 words, counted)*
->
-> **Out:** "As communication has become more important, I want to improve my writing." *(12 words — a 59% cut, computed)*
->
-> *As we all know* cut as a contentless opener · *with the development of society* fails the could-it-be-false test as written, but the sentence underneath makes a real claim, so the claim is restated specifically instead of deleted · *the communication skills has* — article and agreement, recast · *very important aspect* → *more important*, dropping an empty abstract noun and a qualifier · comma splice at *therefore* repaired · *make an improvement to* → *improve* · *writing ability* → *writing*.
->
-> **Judgment call:** for a cover letter, where a generic premise tells a recruiter nothing about the applicant, "I want to improve my writing" alone would be stronger. For the explanatory purpose inferred above, the premise and its causal link stay. This is why Pass 0 has to run first.
->
-> **Left alone:** the claim that communication has grown in importance. Whether it is true sits outside a stylistic edit — but deleting it would have removed the reason the sentence gives for the writer's goal, which §1 protects.
+Moved to `references/worked-example.md` — a filled default output showing tone, change explanations, and the counted-word convention. Load it when calibrating the output shape; routine edits do not need it.
 

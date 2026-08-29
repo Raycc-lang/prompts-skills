@@ -53,7 +53,7 @@ skill_guided_success, environment_infrastructure_failure,
 output_format_schema_mismatch, background_service_lifecycle_failure,
 algorithmic_logic_error, static_verification_without_runtime,
 skill_guidance_misapplied_or_ignored, timeout_budget_exhaustion. The full
-12-pattern taxonomy (appendix Table 11) was beyond the accessed text.
+12-pattern taxonomy (appendix Table 11) was not included in the accessed text.
 
 **F5 — Retrieval is an independent bottleneck.**
 As the pool grows 5 → 100 skills, usage precision collapses (29.6% → 3.3%) while
@@ -68,13 +68,14 @@ Algorithmic logic errors (8.3% → 7.4%) and static-verification-only runs
 (~12% across all arms) are barely affected. A skill should end in a runtime check
 because rereading one's own output is not verification.
 
-**F7 — Cross-framework transfer is a distinct question (RQ3).**
-The study distills skills from Codex-side experience and applies them under
-Gemini CLI. A standardized skill format decouples the procedure from the source
-harness's prompt style, unlike raw workflow memory. The direction of the measured
-result was not extractable from the accessed text (truncated before the RQ3
-results); treat framework-neutral wording as a design principle, not a confirmed
-finding.
+**F7 — Distilled skills transfer across frameworks; raw traces barely do (RQ3).**
+Skills built from Codex trajectories and evaluated under Gemini CLI beat the
+Gemini raw baseline (56%) in all six trajectory mixtures: 62–84%. Per mixture
+(WfM / Skill): 0s5f 60/62, 1s4f 58/76, 2s3f 60/76, 3s2f 56/76, 4s1f 70/74,
+5s0f 54/84 — skill beats transferred workflow memory every time, by +2 to +30
+(smallest lifts 0s5f +2 and 4s1f +4). Values are Figure 4's printed bar labels,
+coordinate-extracted from the PDF text layer; no appendix table reports RQ3.
+One transfer direction only (Codex → Gemini CLI, one target model).
 
 ## 2. WikiSkill (arXiv:2608.27454v1, accessed 2026-08-29)
 
@@ -166,11 +167,11 @@ no published memory schema.
 | 5. End with a runtime check | F6 |
 | 6. One mechanism per rule | F1 |
 | 7. Provenance | W7, M3 |
-| 8. Stay retrievable | F5, M2 |
+| 8. Stay retrievable | F5 |
 | 9. Compress | F3, M4, W6 |
 | 10. Mark portability | M5, W5, F7 |
 | Maintenance loop | M6 |
-| Author mode step 2 (ground in a real run) | F2, W1, W2 |
+| Author mode step 2 (ground in a real run) | W2 |
 | Distill mode | F2, F3, M1 |
 | Diagnose classes | D1–D3 (F4), F5 |
 | Revise discipline | W3, W4, M3, M4 |

@@ -1,6 +1,7 @@
 ---
 name: "jiangou-learning-analysis"
 description: "Analyze any learning goal, study method, or learning material with the 渐构分析 (Gradual Construction Analysis) framework. Use when the user asks to design or critique a study plan, diagnose why their learning isn't working (memorized but can't apply, knows the formula but never thinks to use it, read it but can't retell it), extract a text's core knowledge as input/output structures, decide whether something should be memorized or trained, or generate practice materials and verification tests. Works for languages, math, programming, physical skills, and professional knowledge."
+when_to_use: "When the user wants to design or critique a study plan, diagnose why learning is not sticking (memorized but can't apply, knows the formula but never thinks to use it, read it but can't retell it), extract a text's core knowledge as input/output structures, decide between memorization and training, or generate practice materials and verification tests — across languages, math, programming, physical skills, and professional knowledge. For deciding whether a material deserves intensive reading before starting it, use intensive-reading."
 ---
 
 # Jiangou Learning Analysis
@@ -45,14 +46,11 @@ say in one line which row you are in.
 Return conditions are observations, not durations: "come back when the same error
 repeats across sessions," not "come back in two weeks."
 
-**Mundane causes.** When a pre-check cause in `references/diagnosis-guide.md` is live
-— sleep, attention conditions, a misread assignment, absent or delayed feedback,
-tooling, or simply too little elapsed practice for the timescale — address it first
-and defer structural diagnosis until it is corrected or controlled. Running both at
-once confounds the structural conclusion. Exception: proceed anyway when the episode
-independently demonstrates a structural failure, which the mundane cause does not
-explain — handling every paraphrase of a rule while being unable to start a real case
-is structural regardless of how tired the learner was.
+**Mundane causes.** If a mundane cause is live — sleep, attention, a misread
+assignment, absent or delayed feedback, tooling, too little elapsed practice —
+address it first and defer structural diagnosis; running both at once confounds
+the structural conclusion. The full pre-check list and the structural-evidence
+exception are in `references/diagnosis-guide.md`.
 
 ## Gate 1 — Intake. Don't analyze on air.
 
@@ -193,15 +191,12 @@ are reciting the framework — go back to gate 1.
 
 A valid material for MODEL construction must satisfy:
 
-1. **Paired (有效经验)** — decide first which case you are in, and say which.
-   *Supervised target mapping* (the learner must produce a specific correct output —
-   a translation, a diagnosis, a solution, a pronunciation): the material must carry
-   both the input and its correct output, because input alone cannot identify which
-   output was intended. *Unsupervised category formation* (the target is a perceptual
-   or distributional boundary rather than a labeled output): structured input alone
-   can do the work, as with phoneme categories induced from varied speech. Default to
-   the supervised case; when you route to the unsupervised one, name the boundary
-   being formed and say why no label is needed.
+1. **Paired (有效经验)** — the material must carry both the input and its correct
+   output, because input alone cannot identify which output was intended. One
+   exception exists: unsupervised category formation, where the target is a
+   perceptual boundary rather than a labeled output and structured input alone can
+   work. Default to the supervised case and say which you are in; the fork and its
+   admission rule are in `references/framework-core.md`.
 2. **Novel (新颖情况)** — generality grows only from unseen cases. Repeating exhausted
    material buys fluency, not generality. Tag every activity as fluency-building or
    generality-building. Fluency is frequently a *precondition* for the next level of
@@ -312,34 +307,28 @@ If a draft fails the bar, the fix is more intake, not more analysis.
 
 ## Operating notes
 
-- **Never invent a number.** No item counts, session counts, durations, or
-  percentages unless they come from one of three places: the learner's own log,
-  budget, or error record; a source you can cite; or a structural requirement that
-  follows from the analysis. Calling a number "conventional" or "a starting point"
-  does not license it — that phrasing has been the main vector for invented numbers in
-  this skill. Learner data does not determine a quantity by itself. Calculate one only
-  when an explicit rule maps the evidence to the quantity; name the rule's source or
-  structural rationale and show the calculation. Otherwise prescribe what to measure
-  and how to adjust from the result, without supplying a placeholder number that will
-  be mistaken for analysis.
+- **Never invent a number.** No counts, durations, or percentages unless they come
+  from the learner's own records, a citable source, or a structural requirement of
+  the analysis; "conventional" and "a starting point" license nothing — that
+  phrasing has been the main leak. Calculate a quantity only when an explicit rule
+  maps the evidence to it: name the rule, show the calculation. Otherwise prescribe
+  what to measure and how to adjust from the result — a placeholder number will be
+  mistaken for analysis.
 - **Cheapest live fix wins.** If a gate-0 row resolves the request, that is the
   answer. Do not append the full structure for completeness.
-- When extracting knowledge from a text, output the I/O table and have the learner
-  retell THAT, not the text. The retell is the comprehension exercise, not the step-7
-  test — for a generalization goal a fluent retell still has to be followed by a novel
-  instance.
-- Distinguish knowledge (a neutral mapping) from advice (a decision derived from that
-  mapping under one goal). Record mappings; derive decisions per goal.
-- **The framework locates failing components; it does not schedule.** Spacing,
-  retrieval practice, and interleaving are structural choices from outside 渐构 that
-  change what gets learned. Import them explicitly and say you are doing so, rather
-  than folding them in as though they were framework outputs.
-- **Sequencing is not covered by the framework.** When a decomposition has more parts
-  than the learner can hold at once, order them by what the learner already has
-  automatic, and say that this ordering came from load considerations, not from 渐构.
-- Epistemic boundary: present the framework's claims as analyses WITHIN 渐构, not as
-  established cognitive-science consensus. For empirical claims about dosing, spacing,
-  perceptual learning, or transfer, distinguish the framework's interpretation from
-  peer-reviewed evidence and say which supports the recommendation.
-- This is 渐构 — gradual construction. Plans produced with this skill must include
-  their own step-7 review cadence and are expected to be rewritten by it.
+- When extracting knowledge from a text, have the learner retell the I/O table, not
+  the text. The retell is the comprehension exercise, not the step-7 test — a
+  generalization goal still needs a novel instance after a fluent retell.
+- Distinguish knowledge (a neutral mapping) from advice (a decision derived from it
+  under one goal). Record mappings; derive decisions per goal.
+- **Scheduling and sequencing come from outside 渐构 — say so when you import
+  them.** Spacing, retrieval practice, and interleaving change what gets learned;
+  sub-task ordering, when the learner can't hold all parts at once, comes from load
+  considerations — order by what the learner already has automatic. Neither is an
+  analysis result; do not present them as one.
+- Epistemic boundary: present the framework's claims as analyses within 渐构, not as
+  established cognitive science. For empirical claims — dosing, spacing, perceptual
+  learning, transfer — say whether the framework's interpretation or peer-reviewed
+  evidence is doing the work.
+- This is 渐构 — gradual construction. Plans must include their own step-7 review
+  cadence and are expected to be rewritten by it.

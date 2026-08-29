@@ -1,6 +1,7 @@
 ---
 name: "skill-name"
-description: "One sentence on what this does, then one on when to use it. Include the words a user would actually say. If a sibling skill covers an adjacent case, name it here so the agent routes correctly."
+description: "One sentence on what this does, in verbs, plus trigger cases in the words a user would actually say. If a sibling skill covers an adjacent case, name it here so the agent routes correctly."
+when_to_use: "The full usage boundary: when to load this skill, and when not to — name the adjacent cases and which sibling skill (or no skill) handles them instead."
 ---
 
 # Skill Name

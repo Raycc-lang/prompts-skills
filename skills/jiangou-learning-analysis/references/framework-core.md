@@ -1,7 +1,8 @@
 # Framework Core: Definitions and Tests
 
 Load when a typing decision is contested, a diagnosis needs the healthy structure,
-or a relation's status (connection model or not) is unclear.
+a relation's status (connection model or not) is unclear, or a material claims
+that input alone — without correct outputs — is sufficient.
 
 These are definitions and tests WITHIN the 渐构 framework — an analytical vocabulary
 for describing learning, not a claim that cognition is literally organized this way.
@@ -100,3 +101,19 @@ success of the connection models built on it — not from matching some pre-give
 "correct" decomposition. Practical consequence: never present one extracted
 structure as the unique truth of a material; present it as the carving that serves
 the stated task.
+
+## 7. The paired-material fork: supervised vs. unsupervised
+
+Step 5 requires a paired material. Before judging that, decide which case the
+learner is in:
+
+- **Supervised target mapping** — the learner must produce a specific correct
+  output (a translation, a diagnosis, a solution, a pronunciation). The material
+  must carry both the input and its correct output, because input alone cannot
+  identify which output was intended.
+- **Unsupervised category formation** — the target is a perceptual or
+  distributional boundary rather than a labeled output. Structured input alone can
+  do the work, as with phoneme categories induced from varied speech.
+
+Default to the supervised case. When you route to the unsupervised one, name the
+boundary being formed and say why no label is needed.

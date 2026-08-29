@@ -1,6 +1,7 @@
 ---
 name: "prompt-engineering"
-description: "Create, improve, debug, grade, or evaluate prompts, system instructions, policies, and agent skills. Use when the user asks to improve text written for a model, wants a prompt built from a goal, asks why a model ignored instructions, or wants prompt variants or an evaluation plan. For authoring a complete skill folder from a workflow or traces, or diagnosing why a skill misfired, use skill-authoring. For human-facing prose, use edit-my-writing."
+description: "Create, improve, debug, grade, or evaluate prompts, system instructions, policies, and the wording of skill files. Use when the user asks to improve text written for a model, wants a prompt built from a goal, asks why a model ignored instructions, or wants prompt variants or an evaluation plan. For authoring a complete skill folder from a workflow or traces, diagnosing why a skill misfired, or reviewing a skill's routing, evidence, or structure before shipping, use skill-authoring. For human-facing prose, use edit-my-writing."
+when_to_use: "When the user wants to create, rewrite, debug, grade, compare, or evaluate text written for a model — prompts, system instructions, policies, or the wording of skill files — especially when a model is ignoring instructions or behaving inconsistently. Not for authoring a complete skill folder, diagnosing a misfired skill, or reviewing a skill's routing, evidence, or structure (use skill-authoring); not for human-facing prose (use edit-my-writing)."
 ---
 
 # Prompt Engineering
@@ -77,6 +78,8 @@ Recover only the fields that matter for the task.
 - **Layer marking:** whether each instruction governs the model running the skill or the artifact that model produces. Group instructions under clearly tagged sections; split or tag an individual instruction when it does not match the section's layer.
 
 Check the frontmatter separately from the body. The description must separate this skill from adjacent skills using likely user wording; prefer one discriminating rule over a long list of examples. Add trigger and non-trigger examples when the boundary is still easy to confuse. Do not put critical routing rules only in the body, because the body may not be loaded until after routing.
+
+This contract covers the skill as text — wording, clarity, instruction structure. Reviewing a skill's routing behavior, evidence base, or ship-readiness belongs to skill-authoring; hand off instead of expanding scope.
 
 For both contracts, ask a question only when a missing answer can materially change scope, safety, cost, recipients, permissions, routing, or correctness. Otherwise make the smallest reasonable assumption and state it briefly after the prompt.
 
@@ -184,7 +187,7 @@ Before delivering, check:
 - The artifact matches the contract you recovered and the user's source request.
 - No [runner] or [offline] rule was copied into the artifact, and no contract field became a literal heading in it.
 - Every retained or added instruction satisfies the [property] and [technique] sections.
-- For an improvement: diff the requirements against the source, and disclose any deliberate change of meaning.
+- For an improvement: extract every requirement from the source and attach a requirements mapping to your delivery notes — one line per source requirement, each marked kept, modified, or dropped, with the reason for any change or drop. The mapping goes in your reply to the user, never inside the artifact. A delivery without this mapping has not done the diff; do not deliver until it exists.
 - For a skill: verify that every other skill named in the frontmatter exists, in both directions — the skills this one hands off to, and the skills that hand off to it. Write one trigger phrasing and one nearby non-trigger phrasing the description must separate. Treat them as routing predictions until they are tested by the router outside the skill.
 
 Do not restate these rules in the artifact in order to perform this check.

@@ -24,6 +24,8 @@ skills/<skill-name>/
 name: "<folder-name>"
 description: "<What it does, in verbs.> Use when the user <trigger cases, in the
 words they would actually say>. For <adjacent case>, use <sibling-skill> instead."
+when_to_use: "<The full boundary: when to load this skill and when not to —
+name adjacent cases and which sibling skill (or no skill) owns them.>"
 ---
 
 # <Skill Name>
@@ -65,8 +67,8 @@ N. Runtime check: verify the result in the world — run it, observe output, or
 Every section is optional except frontmatter, title, procedure, and the runtime
 check. Never emit a section to fill the skeleton — "nothing to report" is legal.
 This repo's `templates/skill-template/SKILL.md` follows this skeleton; keep the
-two aligned when either changes. Working budget: bodies in this evidence base run
-roughly 45–150 lines [W6]; past ~150, material usually belongs in `references/`.
+two aligned when either changes. Working budget: bodies in this evidence base
+average 45–129 lines [W6]; past which material usually belongs in `references/`.
 
 ## Description examples
 
@@ -92,6 +94,12 @@ from its neighbors using likely user wording.
 Bilingual users: include both languages' trigger words when both occur
 (e.g., "写技能 / author a skill").
 
+Pair the description with `when_to_use` (this repo's convention): the
+description carries the routing triggers; `when_to_use` carries the full
+boundary in sentence form, including negatives and handoffs. Hosts that do not
+read `when_to_use` ignore it harmlessly — but do not rely on that: any wording
+the router must see stays in the description.
+
 ## Test proposal template
 
 Attach to every authored or distilled skill:
@@ -114,4 +122,5 @@ session and record outcomes:
 
 Description design improves discrimination but cannot control the retriever,
 candidate generation, or selection policy; treat persistent mis-routing in a large
-library as a library problem, not a wording problem [M2].
+library as a library problem, not a wording problem (design judgment; no cited
+study measures the description-vs-retriever tradeoff).
