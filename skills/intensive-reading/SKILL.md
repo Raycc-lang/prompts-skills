@@ -1,7 +1,7 @@
 ---
 name: "intensive-reading"
 description: "Decide whether a book, paper, or course deserves intensive reading, and if so route it to the right session shape before starting. Use when the user is starting a new material and wants it set up, asks whether something is worth reading properly, or asks which reading approach fits a material. Runs before reading only. Not for summarizing, note-taking, or extracting knowledge from a passage."
-when_to_use: "When the user is about to start a book, paper, or course and wants to decide whether it earns intensive treatment and what shape the sessions should take — this runs before reading starts, not during. Not for summarizing, note-taking, or extracting knowledge from a passage (hand off to jiangou-learning-analysis)."
+when_to_use: "When the user is about to start a book, paper, or course and wants to decide whether it earns intensive treatment and what shape the sessions should take — this runs before reading starts, not during. Not for summarizing, note-taking, or extracting knowledge from a passage."
 ---
 
 # Intensive Reading — setup

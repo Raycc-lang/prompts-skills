@@ -1,7 +1,7 @@
 ---
 name: "jiangou-learning-analysis"
 description: "Analyze any learning goal, study method, or learning material with the 渐构分析 (Gradual Construction Analysis) framework. Use when the user asks to design or critique a study plan, diagnose why their learning isn't working (memorized but can't apply, knows the formula but never thinks to use it, read it but can't retell it), extract a text's core knowledge as input/output structures, decide whether something should be memorized or trained, or generate practice materials and verification tests. Works for languages, math, programming, physical skills, and professional knowledge."
-when_to_use: "When the user wants to design or critique a study plan, diagnose why learning is not sticking (memorized but can't apply, knows the formula but never thinks to use it, read it but can't retell it), extract a text's core knowledge as input/output structures, decide between memorization and training, or generate practice materials and verification tests — across languages, math, programming, physical skills, and professional knowledge. For deciding whether a material deserves intensive reading before starting it, use intensive-reading."
+when_to_use: "When the user wants to design or critique a study plan, diagnose why learning is not sticking (memorized but can't apply, knows the formula but never thinks to use it, read it but can't retell it), extract a text's core knowledge as input/output structures, decide between memorization and training, or generate practice materials and verification tests — across languages, math, programming, physical skills, and professional knowledge. Not for deciding whether a material deserves intensive reading before starting it."
 ---
 
 # Jiangou Learning Analysis

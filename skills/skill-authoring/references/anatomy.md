@@ -23,9 +23,10 @@ skills/<skill-name>/
 ---
 name: "<folder-name>"
 description: "<What it does, in verbs.> Use when the user <trigger cases, in the
-words they would actually say>. For <adjacent case>, use <sibling-skill> instead."
+words they would actually say>. Not for <adjacent case, in the user's words>."
 when_to_use: "<The full boundary: when to load this skill and when not to —
-name adjacent cases and which sibling skill (or no skill) owns them.>"
+state the adjacent cases it does not cover, as cases, never as the name of
+another skill.>"
 ---
 
 # <Skill Name>
@@ -38,7 +39,7 @@ description.
 - Concrete trigger case
 - Another trigger case
 
-Not for: <adjacent case, and which skill owns it>.
+Not for: <adjacent case>.
 
 ## Preconditions
 
@@ -75,7 +76,7 @@ average 45–129 lines [W6]; past which material usually belongs in `references/
 The description is the only text the router sees. It must separate this skill
 from its neighbors using likely user wording.
 
-**Works** — verbs, trigger language, explicit handoff:
+**Works** — verbs, trigger language, explicit boundary:
 
 > "Convert spreadsheet workflows into verified openpyxl/pandas scripts. Use when
 > the user asks to automate an Excel task, convert formulas to Python, or batch
@@ -87,7 +88,7 @@ from its neighbors using likely user wording.
 > "A helpful skill for working with data files and making the user more
 > productive with spreadsheets."
 
-**Fails** — overlaps a sibling with no handoff, guaranteeing mis-routing:
+**Fails** — overlaps a sibling with no stated boundary, guaranteeing mis-routing:
 
 > "Improves prompts and helps write skills."
 
@@ -96,7 +97,7 @@ Bilingual users: include both languages' trigger words when both occur
 
 Pair the description with `when_to_use` (this repo's convention): the
 description carries the routing triggers; `when_to_use` carries the full
-boundary in sentence form, including negatives and handoffs. Hosts that do not
+boundary in sentence form, including negatives. Hosts that do not
 read `when_to_use` ignore it harmlessly — but do not rely on that: any wording
 the router must see stays in the description.
 
@@ -114,8 +115,8 @@ Routing can only be tested outside the skill, after installation. Run it in a re
 session and record outcomes:
 
 - At least three positive phrasings, in the user's languages.
-- At least two near-boundary negatives that should route to a named sibling.
-- At least one confuser aimed at each sibling named in the description.
+- At least two near-boundary negatives that should route elsewhere.
+- At least one confuser per adjacent case named in the non-triggers.
 - For each case: expected skill, observed skill, miss or false alarm.
 - Record the sibling set and library size the test ran against — results are
   library-relative, and usage precision degrades as pools grow [F5].

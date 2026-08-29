@@ -1,7 +1,7 @@
 ---
 name: "edit-my-writing"
-description: "Edit English prose — email, cover letter, resume line, doc, post — through ordered passes, then explain the changes so the edit is learnable. Use when the user pastes prose and wants it tightened or diagnosed, or supplies an original plus their own edit for grading. For prompts, instructions, or skill files, use prompt-engineering instead."
-when_to_use: "When the user pastes English prose (email, cover letter, resume line, doc, post) and wants it edited, tightened, or diagnosed, or hands over an original plus their own edit to be graded — with an explanation of the changes as part of the deliverable. Not for prompts, instructions, or skill files (use prompt-engineering)."
+description: "Edit English prose — email, cover letter, resume line, doc, post — through ordered passes, then explain the changes so the edit is learnable. Use when the user pastes prose and wants it tightened or diagnosed, or supplies an original plus their own edit for grading. Not for prompts, instructions, or skill files — those are text written for a model."
+when_to_use: "When the user pastes English prose (email, cover letter, resume line, doc, post) and wants it edited, tightened, or diagnosed, or hands over an original plus their own edit to be graded — with an explanation of the changes as part of the deliverable. Not for prompts, instructions, or skill files."
 ---
 
 # Edit My Writing

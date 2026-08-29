@@ -1,7 +1,7 @@
 ---
 name: "skill-authoring"
-description: "Author, distill, revise, diagnose, or gate agent skills (SKILL.md folders), using an evidence base for when skills help, why they work, and where they fail. Use when the user wants to create a skill from a goal or proven workflow (写技能、做技能、把这个流程沉淀成 skill), extract one from execution traces, diagnose why a skill misfired or was ignored, or review one before shipping. For text-level edits or grading of a skill's wording without touching its routing, evidence, or structure, use prompt-engineering."
-when_to_use: "When the user asks to turn a goal or proven workflow into a reusable skill, distill one from execution traces, diagnose a skill that loaded but misfired or was ignored, revise one after new evidence, or gate one before shipping. Not for one-off instructions (write a prompt instead) or wording-only edits to prompts or skill files (use prompt-engineering)."
+description: "Author, distill, revise, diagnose, or gate agent skills (SKILL.md folders), using an evidence base for when skills help, why they work, and where they fail. Use when the user wants to create a skill from a goal or proven workflow (写技能、做技能、把这个流程沉淀成 skill), extract one from execution traces, diagnose why a skill misfired or was ignored, or review one before shipping. Not for one-off instructions (write a prompt instead), and not for a pure wording task on a prompt or skill file with no skill problem attached — wording edits made while authoring, diagnosing, revising, or gating a skill stay in this one."
+when_to_use: "When the user asks to turn a goal or proven workflow into a reusable skill, distill one from execution traces, diagnose a skill that loaded but misfired or was ignored, revise one after new evidence, or gate one before shipping. Not for one-off instructions (write a prompt instead) or pure wording edits to prompts or skill files when no skill problem is being diagnosed or fixed."
 ---
 
 # Skill Authoring
@@ -22,7 +22,9 @@ Skeleton and description examples: `references/anatomy.md`.
 - Revising a skill after new evidence; gating a skill before shipping.
 
 Not for: one-off instructions — write a prompt. Not for:
-text-level wording edits to prompts or skill files — use prompt-engineering.
+pure wording edits to prompts or skill files when no skill problem is being
+diagnosed or fixed. Wording edits made as part of the work above stay in this
+skill.
 
 ## Four failure surfaces
 
@@ -67,6 +69,8 @@ tracking; the other modes stand alone.
 
 ### Diagnose — a skill misfired
 
+Before classifying: if the report is that a skill does not load or trigger, check that the skill folder exists at the deployed path — a missing file produces the same symptom as a routing failure and needs no wording analysis.
+
 Map the observed failure to a class before touching text:
 
 - **Routing** (the Retrieval surface) — never loaded, or a near-duplicate loaded instead → fix the frontmatter description, not the body [F5].
@@ -91,7 +95,7 @@ Then change only the parts tied to the observed failure.
 
 ## Writing rules — what the artifact must satisfy
 
-1. **Frontmatter is the router.** On hosts with layered loading, the description alone decides loading and the body may never load — that is the host platform contract, not a finding from the evidence base. State what it does using verbs, include the words users actually say, and hand off adjacent cases by name. No critical routing rule may live only in the body. The description must also discriminate: similar distractors measurably degrade identification [F5].
+1. **Frontmatter is the router.** On hosts with layered loading, the description alone decides loading and the body may never load — that is the host platform contract, not a finding from the evidence base. State what it does using verbs, include the words users actually say, and state adjacent cases it does not cover — as cases, never as the name of another skill. No critical routing rule may live only in the body. The description must also discriminate: similar distractors measurably degrade identification [F5].
 2. **Procedure over facts.** Order steps as actions; name tools; place intermediate checkpoints and output constraints. If a rule's value is a fact, check whether it belongs in the prompt or context instead of the skill [F1].
 3. **Scope is content.** Applicability conditions, preconditions to check first, and non-triggers are part of the skill, not documentation about it [D1, D2].
 4. **License to adapt.** Name which steps are invariant and which adapt to context, and when to abandon the skill entirely [D3].
@@ -113,8 +117,8 @@ Then change only the parts tied to the observed failure.
 
 Before delivery, check:
 
-- [ ] The description states what it does, the user's trigger language, and handoffs; no critical routing rule lives only in the body.
-- [ ] Every skill named in the frontmatter exists, in both directions — the skills this one hands off to, and the skills that hand off to it.
+- [ ] The description states what it does, the user's trigger language, and non-triggers; no critical routing rule lives only in the body.
+- [ ] Scope boundaries name cases, not other skills — the skill must not assume any other skill exists. If another skill's name appears anywhere, remove it.
 - [ ] Every rule anchors procedure, warns of a pitfall, or supplies a missing fact.
 - [ ] Scope names preconditions and at least one non-trigger.
 - [ ] The procedure ends with a runtime check that needs no tooling beyond what the task itself requires.

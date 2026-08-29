@@ -1,7 +1,7 @@
 ---
 name: "skill-name"
-description: "One sentence on what this does, in verbs, plus trigger cases in the words a user would actually say. If a sibling skill covers an adjacent case, name it here so the agent routes correctly."
-when_to_use: "The full usage boundary: when to load this skill, and when not to — name the adjacent cases and which sibling skill (or no skill) handles them instead."
+description: "One sentence on what this does, in verbs, plus trigger cases in the words a user would actually say. State adjacent cases it does not cover as cases — never name another skill."
+when_to_use: "The full usage boundary: when to load this skill, and when not to — state the adjacent cases it does not cover, without naming other skills."
 ---
 
 # Skill Name
@@ -14,7 +14,7 @@ restatement of the description.
 - Concrete trigger case
 - Another trigger case
 
-Not for: <the adjacent case, and which skill handles it instead>
+Not for: <the adjacent case, stated as a case — no skill names>
 
 ## Preconditions
 
