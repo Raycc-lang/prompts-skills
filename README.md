@@ -6,6 +6,8 @@ A personal library of reusable **agent skills** and **prompts**, kept in one rep
 
 ```
 skills/          Agent Skills — one folder per skill, each with a SKILL.md
+meta/            Maintenance records per skill (evidence, provenance, revision
+                 notes) — used to iterate the skills, never installed
 prompts/         Standalone prompts, grouped by domain
   coding/
   writing/

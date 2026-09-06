@@ -1,127 +1,73 @@
-# Skill anatomy
+# Packaging a skill
 
-Skeleton for the artifact this skill produces, plus description examples.
-Load this when authoring; SKILL.md carries the rules.
+Load when turning the procedure into a distributable folder. Structure serves the
+work: use the sections that make the runner's next decision clear.
 
-## Folder layout
+## Install unit
 
+```text
+skills/<name>/
+  SKILL.md          # entrypoint: purpose, decisions, resource-loading cues
+  references/       # optional knowledge, examples, schemas, task-specific guides
+  scripts/          # optional executable helpers with dependencies and invocation
+  assets/           # optional templates or other inputs used to produce artifacts
+
+meta/<name>/        # outside install unit: evidence, revisions, evaluation fixtures
 ```
-skills/<skill-name>/
-  SKILL.md              # frontmatter + procedure; stays short
-  references/           # heavy material, loaded on demand
-    evidence.md         # optional: findings the rules rest on
-    notes.md            # persistent revision knowledge — phenomenon, root cause,
-                        # current rule, rejected changes; created per Revise trigger
-    ...                 # optional: guides, templates, schemas
-```
 
-`name` in the frontmatter must match the folder name.
+Copy the entire skill folder when installing. Resolve bundled resources relative
+to the skill, and task outputs relative to the chosen workspace. Document a genuine
+host dependency instead of pretending every implementation is portable.
 
-## SKILL.md skeleton
+For consolidation, inventory what the existing workflow reads and executes. Preserve
+useful knowledge and executable assets, including private knowledge when the user
+requests a private package. Keep archives and authoring records outside the install
+unit. Verify relocation rather than relying only on a search for absolute paths.
+
+## Optional starting structure
 
 ```markdown
 ---
 name: "<folder-name>"
-description: "<What it does, in verbs.> Use when the user <trigger cases, in the
-words they would actually say>. Not for <adjacent case, in the user's words>."
-when_to_use: "<The full boundary: when to load this skill and when not to —
-state the adjacent cases it does not cover, as cases, never as the name of
-another skill.>"
+description: "<What it accomplishes>. Use when <recognizable requests>. <Relevant boundary, if ambiguous>."
 ---
 
-# <Skill Name>
+# <Name>
 
-One or two lines: the outcome this skill produces — not a restatement of the
-description.
-
-## When this applies
-
-- Concrete trigger case
-- Another trigger case
-
-Not for: <adjacent case>.
-
-## Preconditions
-
-What must hold before applying. Check these first; if one fails, say so and stop
-rather than executing steps whose assumptions are broken.
+<Useful outcome and any essential context.>
 
 ## Procedure
 
-1. Step, stated as an action.
-2. Step. Mark steps that must adapt to context, and how.
-3. ...
-N. Runtime check: verify the result in the world — run it, observe output, or
-   execute a test. Never "reread and confirm."
+1. <Inspect the input that determines the approach; load a reference if needed.>
+2. <Choose the action using explicit criteria; give the alternative when they fail.>
+3. <Produce the result and check it using criteria appropriate to the task.>
 
-## Pitfalls
+## Example or supporting material
 
-- Symptom → cause → avoidance. (Provenance: the traceable source — the run,
-  requirement, or contract that produced this.)
-
-## Notes
-
-- Which parts are invariant and which adapt; when to abandon the skill.
-- Heavy reference material lives in `references/`.
+<Include when it clarifies a difficult choice; link larger material with a loading cue.>
 ```
 
-Every section is optional except frontmatter, title, procedure, and the runtime
-check. Never emit a section to fill the skeleton — "nothing to report" is legal.
-This repo's `templates/skill-template/SKILL.md` follows this skeleton; keep the
-two aligned when either changes. Working budget: bodies in this evidence base
-average 45–129 lines [W6]; past which material usually belongs in `references/`.
+The skeleton is not a required output schema. A reference lookup skill may need
+a selection guide rather than a sequence.
+Leave out sections that do not help the runner. Do not expose authoring questions,
+provenance tables, or evaluation rubrics as user-facing output by default.
 
-## Description examples
+## Description
 
-The description is the only text the router sees. It must separate this skill
-from its neighbors using likely user wording.
+On hosts that expose name/description before loading the body, those fields carry
+the routing cues. Name the task and likely user wording. Add adjacent exclusions
+where confusion is plausible; avoid enumerating every conceivable non-use.
 
-**Works** — verbs, trigger language, explicit boundary:
+- Useful: "Automate repeated Excel transformations with Python. Use for converting
+  formulas into scripts or batch-processing workbooks; excludes controlling a live
+  Excel window."
+- Weak: "A helpful data productivity skill."
 
-> "Convert spreadsheet workflows into verified openpyxl/pandas scripts. Use when
-> the user asks to automate an Excel task, convert formulas to Python, or batch
-> process .xlsx files. For reading or explaining a spreadsheet by hand, no skill
-> is needed."
+For bilingual use, include the user's actual trigger phrases when useful. This
+repository also permits `when_to_use`; keep essential cues in `description` for
+hosts that ignore the extra field. Follow the target host's supported frontmatter.
 
-**Fails** — vague, no trigger words, no boundary:
-
-> "A helpful skill for working with data files and making the user more
-> productive with spreadsheets."
-
-**Fails** — overlaps a sibling with no stated boundary, guaranteeing mis-routing:
-
-> "Improves prompts and helps write skills."
-
-Bilingual users: include both languages' trigger words when both occur
-(e.g., "写技能 / author a skill").
-
-Pair the description with `when_to_use` (this repo's convention): the
-description carries the routing triggers; `when_to_use` carries the full
-boundary in sentence form, including negatives. Hosts that do not
-read `when_to_use` ignore it harmlessly — but do not rely on that: any wording
-the router must see stays in the description.
-
-## Test proposal template
-
-Attach to every authored or distilled skill:
-
-- **Task 1 (typical):** <representative request> — pass when <observable result>.
-- **Task 2 (edge):** <boundary case from the scope section> — pass when the skill
-  either handles it or explicitly declines.
-
-### External routing test
-
-Routing can only be tested outside the skill, after installation. Run it in a real
-session and record outcomes:
-
-- At least three positive phrasings, in the user's languages.
-- At least two near-boundary negatives that should route elsewhere.
-- At least one confuser per adjacent case named in the non-triggers.
-- For each case: expected skill, observed skill, miss or false alarm.
-- Record the sibling set and library size the test ran against — results are
-  library-relative, and usage precision degrades as pools grow [F5].
-
-Description design improves discrimination but cannot control the retriever,
-candidate generation, or selection policy; treat persistent mis-routing in a large
-library as a library problem, not a wording problem (design judgment; no cited
-study measures the description-vs-retriever tradeoff).
+Describe boundaries as tasks. An explicit dependency on another skill is acceptable
+when required and available: state why it is needed and what to do if unavailable.
+Persistent misrouting may come from the host's selection policy or library rather
+than the text. Test selection in the actual library before claiming a routing fix.
