@@ -32,6 +32,24 @@ correctness, preserved requirements, unsupported additions, and unnecessary ques
 or work. For subjective comparisons, hide version labels from the grader when practical.
 Treat preferences as preferences; do not fabricate objective scores for them.
 
+For prompts intended to make an independent judgment, add tests for two distinct
+failure modes when relevant:
+
+- **Framing sensitivity:** keep the underlying evidence and decision criteria fixed,
+  but vary the user's stated preference or expected conclusion in opposite directions.
+  The judgment should not move materially unless the changed wording introduces a real
+  requirement or new evidence. A difference is a failure signal to investigate, not
+  by itself proof of sycophancy.
+- **Conclusion-first rationalization:** check whether the prompt establishes criteria
+  and criterion-level judgments before requesting the overall conclusion. Where a
+  meaningful comparison is possible, contrast this with a version that asks for an
+  overall score or choice first and inspect whether component judgments merely conform
+  to that initial result.
+
+Do not force neutrality onto advocacy tasks. If the task is explicitly to make the
+case for one side, test faithfulness to that goal instead of penalizing directional
+coverage.
+
 ## Execute in the intended context
 
 A test run submits the prompt to a model in the role and context that deployment uses.
