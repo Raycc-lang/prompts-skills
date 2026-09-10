@@ -35,6 +35,15 @@ versus preferences, resolve conflicting directions from the user's stated priori
 and specify the decision when no option satisfies them. For subjective qualities,
 use concrete examples or contrasts rather than adding adjectives like "excellent."
 
+When the target task asks for an independent judgment, comparison, recommendation,
+diagnosis, verification, or selection, read
+[judgment and review](references/judgment-and-review.md). Treat the user's preferred
+conclusion as context rather than evidence unless it is itself a real decision
+constraint. Define criteria and evidence needs so plausible alternatives can still win,
+then form the overall conclusion from criterion-level judgments rather than choosing a
+result first and rationalizing it afterward. Skip this neutrality procedure when the
+user explicitly wants advocacy or one-sided exploration.
+
 ## 2. Inspect the operating context
 
 For a simple standalone prompt, confirm the inputs and output are enough. For a
@@ -109,9 +118,11 @@ model cannot reliably infer the needed distinctions.
   can implement user requirements or prevent concrete failures; include the allowed
   alternative when otherwise unclear. Apply them only to the relevant condition.
 - **Reasoning and checks:** request useful results such as a source comparison,
-  calculation, or decision rationale, not hidden chain-of-thought. Choose a check
-  against criteria, input evidence, a tool, or a test. Self-review can find constraint
-  mismatches but is not independent proof of factual correctness.
+  calculation, criterion-level judgment, or decision rationale, not hidden chain-of-thought.
+  For evaluative tasks, establish criteria before the overall judgment when feasible;
+  use numeric scores only when the scale has a meaningful interpretation. Choose a
+  check against criteria, input evidence, a tool, or a test. Self-review can find
+  constraint mismatches but is not independent proof of factual correctness.
 
 Add multi-stage or multi-candidate procedures only for a named need. Separate model
 calls or a sampling mechanism are needed to claim separately sampled candidates;
@@ -135,6 +146,11 @@ Check requirements and concrete output quality, not just whether instructions lo
 professional. Include a typical case and a case that changes a consequential condition.
 For repeated or important use, retain regression cases and separate tuning from held-out
 evaluation. Test variability when it affects the conclusion.
+
+For independent-judgment prompts, include framing-sensitivity tests when directional
+wording could bias evidence selection or the conclusion. Keep the underlying facts and
+criteria fixed while varying the user's stated preference or expected answer; material
+changes in judgment without evidential cause are a failure signal, not proof by themselves.
 
 Distinguish structural inspection, an author-side walkthrough, target-model execution,
 and a comparative evaluation. Use fresh test contexts with only deployment-available
