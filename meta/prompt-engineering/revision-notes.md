@@ -65,3 +65,43 @@ reported separately from future target-model evaluation.
 The description now excludes reviewing a skill's runtime behavior; those
 requests route to skill-authoring. The prompt template's placeholders now use
 `{{...}}` so they survive Markdown rendering.
+
+# Revision — 2026-09-10
+
+## Authorized scope
+
+Ray requested implementation of two prompt-engineering techniques discussed while
+reviewing *AI Prompting for Everyone*: reduce directional/sycophantic framing in
+independent judgments, and evaluate criteria before forming the overall conclusion.
+Cross-model review was explicitly left outside this change because it is primarily an
+agentic-workflow concern rather than a prompt-only capability.
+
+## Changes
+
+- Added `references/judgment-and-review.md` with conditional guidance for neutral
+  assessment, evidence selection, criteria-first evaluation, and conclusion-last
+  synthesis.
+- Added a core routing rule in `SKILL.md` so the reference is loaded for independent
+  judgment, comparison, recommendation, diagnosis, verification, and selection tasks.
+- Kept advocacy and intentionally one-sided exploration outside the neutrality rule.
+- Added framing-sensitivity tests that hold evidence and criteria fixed while varying
+  the user's preferred conclusion.
+- Added checks for conclusion-first rationalization and retained the existing rule
+  against meaningless numerical scoring.
+
+## Design boundaries
+
+- Neutrality is a property of the procedure, not forced balance in the conclusion.
+  Strongly one-sided evidence may still justify a strongly one-sided result.
+- User preferences that are genuine decision constraints remain part of the rubric;
+  user predictions or favored answers are not treated as evidence.
+- Criteria-first evaluation is conditional and proportionate. It is not a requirement
+  to generate a rubric for every factual or simple generation task.
+- The skill asks for observable evidence and concise rationale, not hidden
+  chain-of-thought.
+
+## Validation status
+
+The change is structurally integrated and includes explicit regression-test designs,
+but no fresh-model A/B execution has been run yet. Treat the behavioral improvement as
+a reasoned, user-approved candidate until measured on representative prompts.
