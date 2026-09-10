@@ -1,0 +1,34 @@
+{
+  "authors": {
+    "model": "gpt-6-astra",
+    "reasoning": "low",
+    "runs_per_condition": 1
+  },
+  "runners": {
+    "model": "gpt-5.6-luna",
+    "reasoning": "low",
+    "cases_per_condition": 6
+  },
+  "results": {
+    "candidate-p": {
+      "criteria_passed": 37,
+      "criteria_total": 37,
+      "runner_seconds": 711.3,
+      "runner_commands": 39,
+      "all_installed_copies_unchanged": true
+    },
+    "candidate-q": {
+      "criteria_passed": 37,
+      "criteria_total": 37,
+      "runner_seconds": 690.35,
+      "runner_commands": 36,
+      "all_installed_copies_unchanged": true
+    }
+  },
+  "condition_map": {
+    "candidate-p": "without skill-authoring",
+    "candidate-q": "with skill-authoring"
+  },
+  "blind_review_adjudicated": true,
+  "original_source_unchanged": true
+}

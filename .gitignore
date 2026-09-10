@@ -16,6 +16,7 @@ desktop.ini
 scratch/
 tmp/
 *.local.md
+.tmp.driveupload/
 
 # Python (for any skill helper scripts)
 __pycache__/

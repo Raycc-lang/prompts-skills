@@ -1,5 +1,29 @@
 # Validation — 2026-09-06
 
+## Subsequent paired experiment — 2026-09-08
+
+A real Job_hunting consolidation task was authored once with and once without the
+current skill using isolated Codex CLI 0.153.4 / GPT-6 Astra low sessions. The treatment
+read the entrypoint and all references. Six fresh GPT-5.6 Luna low runner sessions per
+artifact tested 37 source-derived criteria; both artifacts passed after evidence-based
+adjudication of one blind-grader error. Both also passed independently reproduced
+offline relocation/helper checks. The source and frozen packages remained unchanged.
+
+This single pair demonstrated no downstream accuracy lift on the tested cases. The
+treatment's installable package was 64.1% smaller through separation of optional
+history/maintenance, but authoring took 16.0% longer in the observed run. These are
+case-specific observations, not generalized efficacy, cost, or speed estimates.
+The baseline already produced useful decision content, portability, and local tests.
+The task contained rich existing rules and scripts; new-procedure discovery, live
+search performance, other models, and authoring variance remain untested.
+
+See the [complete report](experiments/2026-09-08-job-hunting/report.md) and
+[protocol](experiments/2026-09-08-job-hunting/protocol.md). Private snapshots, exact
+outputs, traces, blind grading, and adjudication remain under
+`/home/<user>/skill-authoring-study-20260908/` in WSL. No runtime skill rule was changed.
+
+The sections below preserve the earlier 2026-09-06 validation record.
+
 ## Actual review exercise: consolidate a private workflow
 
 Input: the user's request and result from task
