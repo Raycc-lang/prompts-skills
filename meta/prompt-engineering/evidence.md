@@ -67,6 +67,15 @@ would reject those labels on form alone. This source example supports removing t
 blanket gate; it is not evidence of measured vocabulary-selection performance or
 of how that prompt was originally authored.
 
+**R3 — User-approved neutral judgment and criteria-first procedure (2026-09-10).**
+While reviewing Andrew Ng's *AI Prompting for Everyone*, Ray identified two techniques
+as worth making automatic in the prompt-engineering skill: avoid letting a user's
+preferred conclusion steer an independent evaluation, and establish evaluative criteria
+before forming the overall conclusion. Ray explicitly requested implementation in the
+GitHub source project. The detailed procedure and regression-test design are our
+engineering interpretation of that requirement; they have not yet been validated by a
+fresh-model A/B comparison.
+
 ## Current instruction crosswalk
 
 | Rule group | Basis / strength |
@@ -78,6 +87,8 @@ of how that prompt was originally authored.
 | Useful headings and examples; no mandatory layer tags in artifacts | R1/R2, P5, G1; representation depends on task |
 | Guards from requirements or concrete failures/risks, with contextual alternatives | FO1 interpreted narrowly; user requirements and G2 |
 | Criteria-based checking distinct from independent factual verification | P2/P3; operational distinction is design judgment |
+| Neutral evidence selection for independent judgment; user preference is not evidence | R3; user-approved engineering procedure, not yet empirically validated in this skill |
+| Criteria-first, conclusion-last evaluation when an overall judgment is consequential | R3; user-approved engineering procedure; numeric scoring remains conditional |
 | Separately sampled candidates and defined selection | P4/P2; execution requirements rather than text slogans |
 | Context placement tested rather than universally prescribed | P6/G1; target-specific validation required |
 | Paired tests, held-out/regression cases, inspection vs execution labels | P5/P8 motivate empirical comparisons; detailed protocol is engineering judgment |
