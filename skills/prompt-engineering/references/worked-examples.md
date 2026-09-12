@@ -37,8 +37,7 @@ When a missing fact prevents the requested reply, ask for that fact and explain
 briefly why it matters. Otherwise draft the reply using what is known; omit
 unnecessary specifics and state relevant uncertainty without guessing.
 
-Return the reply only, or the necessary clarification if blocked. Drafting does
-not authorize sending.
+Return the reply only, or the necessary clarification if blocked.
 
 Case facts:
 {{case_facts}}
@@ -47,8 +46,11 @@ Customer message:
 {{customer_message}}
 ```
 
-Useful changes: conditional clarification, authoritative evidence for claims, and
-separation of drafting from action. The headings and prohibition serve the task.
+Useful changes: conditional clarification and authoritative evidence for claims.
+The headings and prohibition serve the task. In this no-tool setting, asking for
+a draft already defines the available action; a sending restriction adds no useful
+direction. A deployment with sending tools would require checking its actual
+authorization policy and preserving any applicable boundary.
 Adding a role title or replacing "professional" with "excellent" would not repair
 the decision. This example does not establish that the prompt outperforms a baseline.
 
@@ -100,3 +102,31 @@ be appropriate if the user requires a bare list; it needs no prior failure to ex
 For an actual revision, inspect the original rather than assuming the requirements
 in this example are complete. Report material changes; keep an exhaustive mapping
 out of the user's reply unless the complexity or request warrants it.
+
+## Example 4: keep constraints that affect the result
+
+User goal: turn supplied notes into a readable project update. The user accepts any
+organization that makes progress, remaining work, and blockers easy to find.
+
+A proposed prompt adds: "Do not use a table. Do not change the note order. Do not
+include an introduction." None of those restrictions follows from this packet.
+They could exclude a useful result without protecting a requirement. A sufficient
+starting prompt is:
+
+```text
+Turn these notes into a readable project update that makes progress, remaining
+work, and blockers easy to find.
+
+Notes:
+{{notes}}
+```
+
+This is a candidate, not evidence that the model needs no further guidance. Add
+specific guidance if a consequential gap appears. If the destination instead
+requires three named fields for an automated import, preserve that exact format:
+the same freedom would now break the consumer. If the user explicitly requests
+prose without tables, preserve that preference as a requirement for this task.
+
+Judge the need for each restriction by the task and consequence, not its negative
+wording. "Use paragraphs only" would impose the same unsupported restriction as
+"Do not use tables" in the original packet.

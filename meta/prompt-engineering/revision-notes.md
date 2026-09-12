@@ -105,3 +105,27 @@ agentic-workflow concern rather than a prompt-only capability.
 The change is structurally integrated and includes explicit regression-test designs,
 but no fresh-model A/B execution has been run yet. Treat the behavioral improvement as
 a reasoned, user-approved candidate until measured on representative prompts.
+
+# Revision — 2026-09-12
+
+Ray requested analysis and implementation after reporting that he removed unnecessary
+content/restrictions from a generated prompt. The shared example was inaccessible due
+to browser automatic approval review; an excerpt was requested. This revision addresses
+the explicit feedback and independently visible local issues, pending case-specific
+review. It does not claim to have analyzed that transcript.
+
+Changes: distinguish result requirements from optional methods; select added
+restrictions by consequence and existing coverage; apply that selection to steps,
+checks, and output sections; remove the sending restriction from the no-tool example;
+add a contrasting flexible-update versus fixed-consumer example and deletion-based
+evaluation guidance. Existing explicit requirements, authorization policy, neutral
+judgment, and criteria-first evaluation remain in effect.
+
+Rejected directions: banning constraint headings or all prohibitions; accepting only
+previously observed failures as reasons for guards; converting every negative rule
+to an equally unnecessary positive command; assuming the user's deletion proves
+equivalent downstream quality. These preserve the 2026-09-06 review's boundaries.
+
+Repository source only; installed copies are synchronized on demand. No fresh-agent
+comparison or downstream prompt execution was performed. See validation for available
+checks and the remaining case-specific evidence.

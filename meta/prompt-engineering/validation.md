@@ -67,3 +67,27 @@ executable helpers. Static checks cannot establish behavioral efficacy or routin
 
 No fresh target-model evaluation was run in this session. The authoring model retained
 the review context, so its walkthroughs are not substituted for a controlled test.
+
+# Validation — 2026-09-12
+
+Mechanical checks passed: `git diff --check` and resolution of local Markdown links
+throughout the runtime package. Runtime edits and maintenance notes remain separated.
+
+Static review: the revision retains explicit requirements and consequential-risk
+guards while making unsupported additions optional. The no-tool example retains
+factuality and conditional clarification. The new fictional example distinguishes
+free organization from an explicit no-table requirement and a fixed import format.
+These are author-side inspections, not generated outputs from fresh model sessions.
+
+Ready-to-run comparison: use the prior git version and revised package in otherwise
+matched fresh author sessions. Supply the project-update packet in worked example 4,
+then separate variants with an explicit no-table request and a fixed three-field
+import contract. Inspect whether generated prompts preserve progress, remaining work,
+and blockers; avoid invented formatting bans in the flexible case; and retain the
+explicit requirements in the changed cases. Give downstream runners the resulting
+prompts and identical notes, checking factual coverage and consumer usability rather
+than adherence to invented rules. No such comparison has run.
+
+The actual shared-example regression remains pending receipt of its text. The user's
+report is evidence of editing friction and priorities, not proof of model behavior
+after deletion. Do not report this revision as a confirmed fix for the unseen run.

@@ -32,6 +32,13 @@ correctness, preserved requirements, unsupported additions, and unnecessary ques
 or work. For subjective comparisons, hide version labels from the grader when practical.
 Treat preferences as preferences; do not fabricate objective scores for them.
 
+For unnecessary-constraint complaints, compare the prompt with and without the
+disputed instructions. Grade the user's actual result requirements, including any
+downstream consumer needs; do not count harmless departures from author-added rules
+as failures. Also check a case where the restriction is consequential or explicitly
+required, so simplification does not silently discard real requirements. Removing
+text establishes a simpler artifact, not equivalent or improved model behavior.
+
 For prompts intended to make an independent judgment, add tests for two distinct
 failure modes when relevant:
 

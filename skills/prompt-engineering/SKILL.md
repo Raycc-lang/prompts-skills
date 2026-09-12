@@ -35,6 +35,12 @@ versus preferences, resolve conflicting directions from the user's stated priori
 and specify the decision when no option satisfies them. For subjective qualities,
 use concrete examples or contrasts rather than adding adjectives like "excellent."
 
+Separate required properties of the result from optional ways of producing it. When
+the user leaves the method open, let the target choose it unless a particular method
+is needed for correctness, compatibility, or another consequential requirement.
+Treat user-removed restrictions as feedback about what matters, not automatically as
+lost requirements to restore. A harmless departure need not be prevented.
+
 When the target task asks for an independent judgment, comparison, recommendation,
 diagnosis, verification, or selection, read
 [judgment and review](references/judgment-and-review.md). Treat the user's preferred
@@ -114,9 +120,13 @@ model cannot reliably infer the needed distinctions.
 - **Output:** specify the fields, ordering, allowed values, or format the consumer
   actually needs, including empty/unknown outcomes where relevant. Use supported
   output controls and validation when parsing requirements warrant them.
-- **Constraints:** state the action or boundary precisely. Explicit prohibitions
-  can implement user requirements or prevent concrete failures; include the allowed
-  alternative when otherwise unclear. Apply them only to the relevant condition.
+- **Constraints:** preserve explicit requirements. For each added restriction, identify
+  the unwanted outcome, why it matters to this task, and why the main request or
+  operating context does not already address it. Omit restrictions on harmless
+  alternatives and speculative mistakes with no meaningful consequence. An observed
+  failure is useful evidence, but a concrete consequential risk can justify a guard
+  before it occurs. State the needed action or boundary precisely and include an
+  allowed alternative when unclear. A separate constraints section is optional.
 - **Reasoning and checks:** request useful results such as a source comparison,
   calculation, criterion-level judgment, or decision rationale, not hidden chain-of-thought.
   For evaluative tasks, establish criteria before the overall judgment when feasible;
@@ -135,6 +145,10 @@ instead of assuming one universal layout. Repeat a short request only when usefu
 
 Roles, common wording, and brevity are tools, not quality scores. Keep the smallest
 sufficient prompt, including examples and context that materially improve decisions.
+Review added steps, checks, and output sections by the same standard: retain what
+changes a relevant decision or makes the result usable. Keep this author-side review
+out of the copyable prompt; replacing unnecessary bans with positive commands does
+not make the extra requirements useful.
 
 ## 5. Check the predicted difference
 

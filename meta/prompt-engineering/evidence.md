@@ -76,6 +76,22 @@ GitHub source project. The detailed procedure and regression-test design are our
 engineering interpretation of that requirement; they have not yet been validated by a
 fresh-model A/B comparison.
 
+**FO2 — User report about removed restrictions (2026-09-12).**
+Ray reported removing a section from a prompt produced using this skill: its purpose
+was unclear, the anticipated behavior seemed unlikely, and violations would not
+matter because the result was the priority. This supports selecting added constraints
+by task consequence and respecting the user's relaxed method requirements. It does
+not prove the constraints were behaviorally redundant or that downstream results
+were equivalent. The linked shared conversation could not be read: browser automatic
+approval review blocked the requested access scope. Its exact wording, removed
+section, assembled skill version, and downstream output remain unverified. The
+conversation excerpt has been requested; no private transcript is copied here.
+
+Static inspection independently found that the current constraints bullet explained
+how to phrase boundaries more clearly than how to select them, and the no-tool
+customer-reply example included an unnecessary sending boundary. The proposed causal
+link to Ray's run remains a hypothesis until the example can be inspected.
+
 ## Current instruction crosswalk
 
 | Rule group | Basis / strength |
@@ -86,6 +102,7 @@ fresh-model A/B comparison.
 | Precise language and selective compression | P1/P7/G1, qualified by meaning preservation |
 | Useful headings and examples; no mandatory layer tags in artifacts | R1/R2, P5, G1; representation depends on task |
 | Guards from requirements or concrete failures/risks, with contextual alternatives | FO1 interpreted narrowly; user requirements and G2 |
+| Select added restrictions by task consequence and existing coverage; leave harmless methods open | FO2 user feedback and static inspection; behavioral effect untested |
 | Criteria-based checking distinct from independent factual verification | P2/P3; operational distinction is design judgment |
 | Neutral evidence selection for independent judgment; user preference is not evidence | R3; user-approved engineering procedure, not yet empirically validated in this skill |
 | Criteria-first, conclusion-last evaluation when an overall judgment is consequential | R3; user-approved engineering procedure; numeric scoring remains conditional |
