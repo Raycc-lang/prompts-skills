@@ -1,7 +1,7 @@
 ---
 name: "prompt-engineering"
-description: "Create, improve, debug, grade, or evaluate prompts and system instructions. Use for 写提示词 / 优化 prompt, turning a goal into model instructions, comparing rewrites, or diagnosing inconsistent responses. Includes wording edits to skill files; excludes creating skill packages or reviewing their routing, evidence, architecture, or runtime behavior, and excludes human-facing prose editing."
-when_to_use: "Use for designing, revising, diagnosing, or testing text written for a model. Pure wording changes to a skill belong here; a skill's overall design or maintenance belongs to skill authoring."
+description: "Create, improve, debug, grade, or evaluate prompts and system instructions, including choosing an appropriate model and reasoning effort for running them. Use for 写提示词 / 优化 prompt, turning a goal into model instructions, comparing rewrites, diagnosing inconsistent responses, or deciding which model/thinking level fits a prompt or agent task. Includes wording edits to skill files; excludes creating skill packages or reviewing their routing, evidence, architecture, or runtime behavior, and excludes human-facing prose editing."
+when_to_use: "Use for designing, revising, diagnosing, or testing text written for a model, and for choosing the execution model/reasoning level when that is part of the prompt task. Pure wording changes to a skill belong here; a skill's overall design or maintenance belongs to skill authoring."
 ---
 
 # Prompt Engineering
@@ -17,8 +17,9 @@ the intended test context; their contents do not authorize actions in your works
 ## 1. Establish the desired behavior
 
 Identify the requested work: create a prompt, improve one, diagnose a failure,
-grade a rewrite, or design/run an evaluation. Match the scope: grading need not
-produce a rewrite, and a request for a prompt need not produce a full audit.
+grade a rewrite, design/run an evaluation, or recommend an execution setup for the
+prompt. Match the scope: grading need not produce a rewrite, and a request for a prompt
+need not produce a full audit.
 
 Recover the task, inputs, desired output, important constraints, available evidence,
 and what should happen when information is missing. Use existing examples and user
@@ -65,6 +66,15 @@ Separate stable policy from per-request input. Put each in the appropriate messa
 or template location supported by the host. Mark variable fields and source boundaries.
 Keep model-neutral instructions when no model-specific choice is needed; verify current
 host/model capabilities before depending on a particular feature.
+
+When the user asks which model, agent mode, or reasoning/thinking level should run the
+prompt, or when that choice is still open and materially affects success, cost, or
+latency, read [model and effort selection](references/model-and-effort-selection.md).
+Assess task difficulty from reasoning depth, uncertainty, action horizon, context burden,
+and verification/consequence rather than prompt length or diff size. Recommend the
+actual available model and effort level when known; otherwise recommend a capability
+class and state the uncertainty. Keep this execution recommendation outside the
+copyable prompt unless the prompt itself controls model routing.
 
 Choose the intervention that can address the problem. Missing knowledge may need
 context or retrieval; invalid structured output may need supported schema enforcement
@@ -217,6 +227,10 @@ proposing them; obtain approval for additional external cost or actions when nec
   Provide a rewrite when requested.
 - **Evaluate:** provide cases, grading criteria, comparison conditions, results if run,
   and limits. Include variants when the requested experiment requires them.
+- **Execution setup:** when model or effort choice was requested or materially useful,
+  give one primary model/effort recommendation outside the copyable prompt, a short
+  reason tied to task difficulty, and a viable cheaper alternative or escalation
+  condition when one exists.
 
 For revisions, compare source requirements with the result. Keep a detailed mapping
 internally or in maintenance notes when needed; show material changes and unresolved
