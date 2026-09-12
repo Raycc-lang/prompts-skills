@@ -68,10 +68,11 @@ executable helpers. Static checks cannot establish behavioral efficacy or routin
 No fresh target-model evaluation was run in this session. The authoring model retained
 the review context, so its walkthroughs are not substituted for a controlled test.
 
-# Validation — 2026-09-12
+# Validation — 2026-09-12 — unnecessary constraints
 
-Mechanical checks passed: `git diff --check` and resolution of local Markdown links
-throughout the runtime package. Runtime edits and maintenance notes remain separated.
+Mechanical checks passed at the time of commit: `git diff --check` and resolution of
+local Markdown links throughout the runtime package. Runtime edits and maintenance
+notes remained separated.
 
 Static review: the revision retains explicit requirements and consequential-risk
 guards while making unsupported additions optional. The no-tool example retains
@@ -88,6 +89,62 @@ explicit requirements in the changed cases. Give downstream runners the resultin
 prompts and identical notes, checking factual coverage and consumer usability rather
 than adherence to invented rules. No such comparison has run.
 
-The actual shared-example regression remains pending receipt of its text. The user's
-report is evidence of editing friction and priorities, not proof of model behavior
-after deletion. Do not report this revision as a confirmed fix for the unseen run.
+The supplied session artifact was subsequently reviewed. It confirms the broader
+prompt-authoring context but does not provide a controlled downstream comparison of the
+removed section. The user's report remains evidence of editing friction and priorities,
+not proof that deletion preserves model behavior in every case.
+
+# Validation — 2026-09-12 — action agents and model/effort selection
+
+## Static integration checks
+
+Inspected the revised entrypoint and `references/model-and-effort-selection.md` after
+writing them. The link is resolvable inside the install unit, the new reference contains
+runtime guidance rather than maintenance provenance, and the detailed evidence remains
+under `meta/`. The entrypoint keeps the model-selection procedure conditional instead
+of adding a mandatory recommendation to every prompt task.
+
+The procedure separates hard execution capabilities from task difficulty and separates
+model choice from reasoning effort. It explicitly rejects three common but unsupported
+shortcuts: judging difficulty from output/diff size, assuming maximum effort is always
+best, and assuming extra reasoning can repair missing tools or context.
+
+## Regression cases for difficulty classification
+
+Use matched fresh author sessions with the revised skill and inspect the recommendation,
+not merely the generated prompt.
+
+1. **Bounded rewrite.** Ask for a grammar-preserving rewrite of a short supplied
+   paragraph with no tools and an obvious acceptance criterion. Expected: a fast capable
+   model and low/ordinary reasoning are sufficient; recommending the most expensive
+   agent setup without another reason is over-selection.
+2. **Repository configuration task.** Use the multi-model proxy task from the supplied
+   TraeWork example: inspect an unfamiliar repository, discover provider capabilities
+   with live credentials, edit configuration, preserve secrets/unrelated state, run
+   probes/tests, and recover from failures. Expected: classify the execution burden as
+   high despite a potentially small diff; prefer a strong coding/agent model and a high
+   reasoning setting when those are available. A fast/low-effort choice solely because
+   "it is only configuration" misses the relevant difficulty.
+3. **Known mechanical edit.** Give the exact file, exact JSON change, no discovery,
+   no ambiguity, and one deterministic validation command. Expected: choose lower
+   reasoning than case 2 even though both ultimately edit configuration.
+4. **Missing capability.** Require a tool or modality one candidate lacks. Expected:
+   remove that model from consideration rather than compensating with higher thinking.
+5. **Escalation.** Start with a capable model on a diagnosis task, then provide an
+   observed failure caused by missing source material. Expected: recommend obtaining the
+   missing material, not merely raising reasoning effort.
+
+These are expected decisions from the authored procedure, not measured model-quality
+results.
+
+## Model-name and effort-level robustness
+
+Repeat case 2 with different fictional or currently available candidate names while
+keeping their described capabilities fixed. The recommendation should follow capability
+and task fit rather than a hard-coded brand ranking. Change the host's effort labels
+while preserving their relative meaning; the procedure should map to the closest
+available setting rather than require literal `low/medium/high/extra-high` names.
+
+No controlled cross-model, cross-effort, latency, or cost benchmark was run. The new
+rules are structurally validated and ready for fresh-session testing, not empirically
+proven to select the globally optimal model for every host.
