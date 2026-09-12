@@ -77,20 +77,35 @@ engineering interpretation of that requirement; they have not yet been validated
 fresh-model A/B comparison.
 
 **FO2 — User report about removed restrictions (2026-09-12).**
-Ray reported removing a section from a prompt produced using this skill: its purpose
-was unclear, the anticipated behavior seemed unlikely, and violations would not
-matter because the result was the priority. This supports selecting added constraints
-by task consequence and respecting the user's relaxed method requirements. It does
-not prove the constraints were behaviorally redundant or that downstream results
-were equivalent. The linked shared conversation could not be read: browser automatic
-approval review blocked the requested access scope. Its exact wording, removed
-section, assembled skill version, and downstream output remain unverified. The
-conversation excerpt has been requested; no private transcript is copied here.
+Ray reported removing unnecessary content from a prompt produced using this skill:
+the anticipated failure seemed unlikely, and violations would not matter because the
+result was the priority. The supplied session artifact and commit `95ebe7d` were later
+reviewed. The commit distinguishes result requirements from optional methods and selects
+added restrictions by task consequence. This supports respecting relaxed method
+requirements; it does not prove that every removed instruction is behaviorally inert or
+that downstream quality is unchanged.
 
-Static inspection independently found that the current constraints bullet explained
-how to phrase boundaries more clearly than how to select them, and the no-tool
-customer-reply example included an unnecessary sending boundary. The proposed causal
-link to Ray's run remains a hypothesis until the example can be inspected.
+Static inspection independently found that the prior constraints bullet explained how
+to phrase boundaries more clearly than how to select them, and the no-tool customer-
+reply example included an unnecessary sending boundary. The `95ebe7d` repair addresses
+those local issues and remains behaviorally untested.
+
+**FO3 — Agent-task execution and model-choice gap (2026-09-12).**
+In the supplied TraeWork session, Ray explicitly asked for both a runnable prompt for an
+action-capable repository agent and advice about which model and thinking level should
+perform the task. Ray reported that the response did not analyze task difficulty or make
+that model/effort recommendation. Static inspection of the skill supports the mechanism:
+it asked authors to note which target model runs a prompt and verify capabilities, but
+contained no procedure for comparing candidate models, rating execution difficulty, or
+choosing reasoning effort.
+
+The same task also exposed a broader design gap for action-capable agents: a prompt can
+describe the desired code/configuration result without defining autonomous continuation,
+workspace inspection, failure recovery, protection of unrelated state, completion checks,
+or the final handoff. The execution-contract and model-selection procedures added on
+2026-09-12 are engineering responses to this task class and user feedback. They are not
+fresh-model evidence that these rules improve completion rates, nor evidence for a
+permanent ranking of any named models.
 
 ## Current instruction crosswalk
 
@@ -98,6 +113,8 @@ link to Ray's run remains a hypothesis until the example can be inspected.
 |---|---|
 | Desired behavior before wording; distinguish requirements from attempted mechanisms | R1 and user-approved review; design judgment |
 | Recover context, message placement, inputs, tools, and controls | G1/G2; host details must be verified when used |
+| Action-capable prompts include execution scope, inspection, continuation, recovery, state boundaries, verification, and handoff when material | FO3 user task and static gap; engineering procedure, behaviorally untested |
+| Select model and reasoning effort from hard capabilities plus reasoning depth, uncertainty, action horizon, context burden, and verification/consequence | FO3 user requirement and static gap; mapping is design judgment and must use current host options |
 | Diagnose earliest visible divergence and preserve uncertainty about causes | P8 motivates trace use; diagnostic categories are our proposed procedure |
 | Precise language and selective compression | P1/P7/G1, qualified by meaning preservation |
 | Useful headings and examples; no mandatory layer tags in artifacts | R1/R2, P5, G1; representation depends on task |
