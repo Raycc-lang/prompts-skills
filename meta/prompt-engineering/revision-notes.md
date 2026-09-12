@@ -109,23 +109,68 @@ a reasoned, user-approved candidate until measured on representative prompts.
 # Revision — 2026-09-12
 
 Ray requested analysis and implementation after reporting that he removed unnecessary
-content/restrictions from a generated prompt. The shared example was inaccessible due
-to browser automatic approval review; an excerpt was requested. This revision addresses
-the explicit feedback and independently visible local issues, pending case-specific
-review. It does not claim to have analyzed that transcript.
+content/restrictions from a generated prompt. The shared example was inaccessible to
+the authoring session at that time, so the original change relied on explicit feedback
+plus static inspection. Commit `95ebe7d` distinguishes result requirements from
+optional methods, selects added restrictions by consequence and existing coverage,
+removes the unnecessary sending boundary from the no-tool example, and adds a
+contrasting flexible-output example.
 
-Changes: distinguish result requirements from optional methods; select added
-restrictions by consequence and existing coverage; apply that selection to steps,
-checks, and output sections; remove the sending restriction from the no-tool example;
-add a contrasting flexible-update versus fixed-consumer example and deletion-based
-evaluation guidance. Existing explicit requirements, authorization policy, neutral
-judgment, and criteria-first evaluation remain in effect.
+The source example later became available in a separate session and the commit was
+reviewed. Its result-versus-method repair remains consistent with the observed request;
+no fresh downstream A/B execution has been run, so behavioral improvement is still not
+claimed.
 
 Rejected directions: banning constraint headings or all prohibitions; accepting only
 previously observed failures as reasons for guards; converting every negative rule
 to an equally unnecessary positive command; assuming the user's deletion proves
 equivalent downstream quality. These preserve the 2026-09-06 review's boundaries.
 
-Repository source only; installed copies are synchronized on demand. No fresh-agent
-comparison or downstream prompt execution was performed. See validation for available
-checks and the remaining case-specific evidence.
+Repository source only; installed copies are synchronized on demand. See validation for
+available checks and remaining behavioral uncertainty.
+
+# Revision — 2026-09-12 — action agents and model/effort selection
+
+## Trigger
+
+Ray supplied the TraeWork example and identified two additional gaps. First, a prompt
+for an action-capable coding agent needs rules for how the agent should carry the work,
+not merely a description of the desired repository result. Second, the original request
+explicitly asked which model and thinking level should run the task, but the skill had
+no procedure for assessing difficulty or making that recommendation.
+
+## Changes
+
+- Added an execution contract for action-capable agents: end state and scope, workspace
+  inspection before committing to an implementation, autonomous continuation, recovery
+  from recoverable failures, protection of unrelated state and secrets, observable
+  completion checks, and a concise final handoff.
+- Added `references/model-and-effort-selection.md` and a conditional routing rule from
+  `SKILL.md` when model/agent-mode/reasoning-level choice is requested or materially
+  affects success, cost, or latency.
+- Expanded the skill description and delivery contract so a prompt request can include
+  an execution recommendation rather than silently dropping that adjacent part of the
+  user's request.
+- Model selection now separates hard capability requirements from task difficulty and
+  evaluates reasoning depth, uncertainty, action horizon, context burden, and
+  verification/consequence. Reasoning effort is selected separately.
+
+## Design boundaries
+
+- Do not hard-code a permanent ranking of current model names; available products and
+  capabilities change. Compare actual candidates when they are known.
+- Do not equate prompt length, output length, or diff size with task difficulty. Small
+  edits may still require substantial discovery and verification.
+- Do not assume higher reasoning effort fixes missing tools, permissions, context, or
+  model capabilities.
+- Do not force a model recommendation into every prompt-engineering response. Apply it
+  when requested or when the execution choice is open and materially consequential.
+- Keep execution advice outside the copyable prompt unless the target prompt itself
+  controls model routing.
+
+## Validation status
+
+The runtime reference and entrypoint are structurally integrated, but no controlled
+cross-model or cross-effort benchmark was run. The difficulty rubric is a user-approved
+engineering procedure derived from the observed task class, not empirical evidence for
+a universal model ranking. See validation for static checks and regression cases.
