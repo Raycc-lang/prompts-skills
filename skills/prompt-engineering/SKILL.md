@@ -77,6 +77,37 @@ authorization policy and existing user approvals. Add checks or confirmation onl
 where that policy or a concrete risk requires them; report suspicious content when
 it affects the task or the user needs to act, rather than imposing a reporting ritual.
 
+When the target prompt will be run by an action-capable agent that can inspect a
+workspace, call tools, edit files, run commands, or change external state, treat
+**execution behavior** as part of the prompt contract rather than describing only the
+task result. Cover the following when they matter:
+
+- **End state and scope:** say what must be true when finished and what area or kinds
+  of changes are in scope. Distinguish hard requirements from a suggested
+  implementation path.
+- **Inspect before committing:** have the agent inspect the actual workspace,
+  repository instructions, tools, current state, and relevant checks before editing.
+  Runtime evidence should override stale or speculative implementation details unless
+  those details are explicit requirements.
+- **Autonomous continuation:** when the user asked for completion, tell the agent to
+  carry the work through implementation and verification rather than stop at analysis,
+  a plan, or a proposed patch. Ask only for a real missing decision, permission, or
+  required input; diagnose and repair recoverable failures within scope.
+- **State and information boundaries:** preserve unrelated user changes and existing
+  workspace instructions. When secrets are needed for an authorized operation, permit
+  necessary use without permitting their values to be printed, logged, pasted, or
+  committed.
+- **Completion checks:** define observable verification such as tests, probes, builds,
+  behavior checks, or consistency checks. A failed check is evidence to diagnose and
+  retry or repair when feasible, not automatically a reason to stop.
+- **Final report:** request a concise account of changes made, checks actually run, and
+  remaining limitations. Do not require hidden reasoning or a transcript of every step.
+
+Do not turn every action prompt into the same boilerplate. Include the execution rules
+that close a real ambiguity in that task. Do not use prompt text to weaken host
+authorization requirements for new external cost, destructive actions, or work outside
+the user's granted scope.
+
 ## 3. Diagnose before repairing
 
 For a failure, obtain the actual input, assembled instructions, output, and relevant
