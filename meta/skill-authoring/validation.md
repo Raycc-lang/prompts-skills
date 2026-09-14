@@ -115,3 +115,47 @@ authoring package; software tests would not establish its behavior.
 
 The repository source and shared template were updated. Installed copies in personal
 or project agent directories were not synchronized; deployment remains on demand.
+
+# Validation — 2026-09-14 — boundary extraction and downstream use
+
+## Checks performed
+
+Frontmatter, names, descriptions, runtime resource links, and diff whitespace passed.
+The entrypoint changed from 8,537 bytes / 139 lines to 8,493 bytes / 135 lines;
+the substantive change is organization and decision logic, not a length reduction.
+
+A fresh author used only the revised runtime package and a fictional vendor-comparison
+packet containing accumulated warnings, two reported failures, actual requirements,
+and a conditional importer contract. The complete
+[author output](experiments/2026-09-14-boundaries/author-output.md)
+replaced vendor-price and formatting bans with eligibility, unknown-evidence, ranking,
+and consumer-mode decisions. It retained the explicit importer fields and existing
+schema validation. Its walkthrough was labeled separately from execution.
+
+A separate fresh runner received only that generated procedure and four task packets:
+mandatory deployment with a cheaper unknown option, deployment as a preference,
+the cheapest confirmed-compatible option, and explicit importer JSON. The complete
+[runner output](experiments/2026-09-14-boundaries/runner-output.md)
+shows Birch provisionally recommended in A, Cedar in B with uncertainty retained,
+Aster in C, and the requested status fields in D. The author reviewed those decisions.
+The actual JSON was parsed and its exact fields and statuses checked mechanically.
+
+The first JSON inspection script assumed a fenced code block and failed to locate the
+valid raw JSON. Correcting the extraction to the Case D section passed without any
+change to the runner's output. This was an evaluator assumption, not a skill failure.
+
+## Reproduction inputs and limits
+
+Use [cases](experiments/2026-09-14-boundaries/cases.json).
+Both sessions used host-inherited model/configuration; exact model identity was not
+recorded. The author received no proposed answer or diagnosis, and the runner received
+no meta-skill, maintenance record, or grading rubric. Output capture after authorship
+preserved the existing response.
+
+This exercised both meta-skill output and downstream decisions on synthetic fixtures.
+There was no baseline/prior-version run, repetition, blinded grader, automatic skill
+selection, live vendor research, or importer integration. Existing removal-ablation
+guidance was expanded but no deletion comparison was executed. Outcomes support these
+specific branches, not a general effectiveness estimate. Maintenance contains exact
+inputs and final outputs; full internal reasoning and complete host tool traces were
+not available as exportable test artifacts.

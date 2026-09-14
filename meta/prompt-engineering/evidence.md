@@ -131,3 +131,16 @@ permanent ranking of any named models.
 
 Implementation decisions and validation limits are recorded in
 [revision notes](revision-notes.md) and [validation](validation.md).
+
+## 2026-09-14 placement and self-application
+
+Source: Ray's explicit request and supplied prior review. Status: user requirement
+plus engineering design, not a new research result or a measured performance claim.
+Placement now uses instruction lifetime, frequency across tasks, and deterministic
+enforcement. Broad project knowledge and occasional procedures can coexist in different
+homes; simple repeated tasks can remain prompt templates. The constraint-admission
+decision is applied to the meta-skill itself, including conditional agent guidance.
+
+Historical crosswalks above describe the earlier revisions. The placement procedure
+and associated examples are the current addition; execution, model selection, judgment,
+and authorization guidance were preserved. See validation for the actual smoke tests.

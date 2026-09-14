@@ -23,8 +23,10 @@ skill**; the model running the skill doesn't need it. Therefore:
 
 ## Entry points for modifying skills
 
-Use the `skill-authoring` skill for creating, diagnosing, revising, or
-reviewing skills; use `prompt-engineering` for pure prompt/wording tasks.
+Use `prompt-engineering` to design prompts and decide whether guidance belongs
+in a prompt, project context, or skill. Use `skill-authoring` for creating,
+diagnosing, revising, or reviewing skill packages; standalone wording edits use
+`prompt-engineering`.
 Their own maintenance records live at `meta/skill-authoring/` and
 `meta/prompt-engineering/`.
 

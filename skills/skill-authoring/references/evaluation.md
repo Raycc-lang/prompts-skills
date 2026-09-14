@@ -37,6 +37,28 @@ Separate factual failures from taste differences and uncertain judgments. Repeat
 runs increase confidence where model variability matters; one pair is a smoke test,
 not a reliable estimate of general effectiveness. Do not fabricate timings or grades.
 
+## Test a revised decision boundary
+
+Use a contrast that changes the correct action, not merely different names or wording.
+A rule extracted from a failure should handle both the original condition and a
+nearby condition where the previously rejected action is appropriate. For example,
+price cannot override a mandatory eligibility requirement, but can decide between
+eligible options. Fixing the original incident while rejecting that valid alternative
+is overfitting.
+
+For a suspected legacy restriction, compare the package with and without it while
+holding other instructions fixed. Revisit its source failure and a normal case, plus
+a case where the restriction is an explicit requirement if applicable. Grade the
+user's outcome and consumer needs rather than compliance with the disputed rule.
+Retire the restriction when the observed results support doing so; distinguish
+small-sample evidence from a guarantee that the rule can never be needed.
+
+For placement changes, inspect the context that actually reaches the runner. A
+forced-loaded skill tests its procedure, not whether the host selects it. Measure
+selection separately using descriptions and neighboring requests in the real library.
+For a meta-skill, keep its authoring output and the downstream runner's result so
+a plausible-looking instruction can be distinguished from a working decision.
+
 ## When execution is unavailable
 
 Perform available mechanical checks and a clearly labeled walkthrough. Save the

@@ -174,3 +174,31 @@ The runtime reference and entrypoint are structurally integrated, but no control
 cross-model or cross-effort benchmark was run. The difficulty rubric is a user-approved
 engineering procedure derived from the observed task class, not empirical evidence for
 a universal model ranking. See validation for static checks and regression cases.
+
+# Revision — 2026-09-14 — instruction lifetime and placement
+
+Ray requested implementation of placement before drafting, and required the two
+meta-skills to apply their own principles. The source snapshot is
+dc32d0a0d7004beaff20d4dddfa7c2495762609c. Scope is the two repository skill packages,
+their maintenance records, and the repository's entrypoint routing sentence.
+Installed copies and unrelated project configuration are outside this operation.
+
+The entrypoint now identifies a particular task, broadly needed project context,
+or reusable task-specific procedure before composing instructions. Mixed requests
+can split across a prompt, AGENTS.md/host equivalent, skill, deterministic controls,
+and maintenance. A simple reusable prompt remains a valid outcome. Explicit artifact
+choices and existing authorization still govern actual writes.
+
+The action-agent procedure moved into a conditionally loaded reference. Independent
+judgment, model/effort selection, failure diagnosis, constraint admission, and scoped
+testing remain available. Repeated explanations were consolidated into their relevant
+decisions; useful prohibitions remain where they express real boundaries. No permanent
+model ranking, line budget, mandatory questionnaire, or new orchestration default was
+introduced.
+
+The description and AGENTS.md routing now permit prompt engineering to decide placement
+before skill authoring constructs a package. Evaluation covers placement and generated
+artifact behavior; historical unnecessary-constraint comparisons remain in place.
+
+See the dated validation entry for actual runs and limits. The shorter entrypoint
+is an artifact measurement, not evidence of improved downstream quality.

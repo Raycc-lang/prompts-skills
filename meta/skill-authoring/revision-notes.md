@@ -80,3 +80,34 @@ Diagnose triggers now include "unstable" for skills with inconsistent output.
 Section 5 opens with "Read the skill's maintenance record when one exists."
 anatomy.md no longer references the repository's templates/ path, keeping the
 installed skill self-contained.
+
+# Revision — 2026-09-14 — decision boundaries rather than incident patches
+
+Ray explicitly requested a structural refactor and self-application of the meta-skill's
+principles. Source snapshot: dc32d0a0d7004beaff20d4dddfa7c2495762609c.
+The previous entrypoint already contained cue/decision/reason/boundary/check questions;
+this revision makes their connection to repair, placement, and testing operational.
+
+The workflow is now: establish task and evidence → derive the decision and its home
+→ encode the procedure → test both sides and revise the mechanism → deliver evidence.
+A new warning first prompts inspection of the choice that caused the failure. Related
+incidents sharing that choice are consolidated; missing conditions, knowledge, delivery,
+and deterministic mechanics lead to different repairs. Raw incidents remain maintenance
+evidence. Explicit user methods and requirements still justify guidance without a
+preexisting failure.
+
+Placement depends on lifetime, breadth across tasks, and enforcement needs. Recurrence
+alone does not imply either a skill or project context. Runtime instructions retain
+the relevant command or interpretation when tooling enforces a requirement.
+Constraint admission asks what consequential gap remains, and applies equally to
+positive and negative phrasing.
+
+Preserved: useful domain knowledge and tools, consolidation as a valid goal, conditional
+recovery, description boundaries, authorization continuity, and honest validation.
+The worked example now shows consolidation of warnings and placement. Evaluation adds
+contrast cases, removal comparisons, and the distinction between forced execution
+and actual host selection. The skill applies those decisions to its own maintenance.
+
+This is a coordinated refactor, not a claim that the prior skill always produced poor
+results. The 2026-09-08 successful consolidation experiment remains counter-evidence to
+that blanket interpretation. No historical result or rejected direction was erased.

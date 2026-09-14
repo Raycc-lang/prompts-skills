@@ -1,139 +1,135 @@
 ---
 name: "skill-authoring"
-description: "Create, consolidate, revise, or review reusable agent skills (SKILL.md folders). Use for 写技能 / 做技能 / 把流程沉淀成 skill, packaging a project's workflow, distilling execution traces, or diagnosing skills that are ignored, generic, rigid, unstable, or unhelpful. Not for one-off prompts or pure wording edits with no skill behavior to improve."
-when_to_use: "Use when creating, consolidating, evaluating, or repairing a reusable agent skill; includes wording changes needed for that work. Excludes one-off prompts and standalone prose polishing."
+description: "Create, consolidate, revise, or review reusable agent skills (SKILL.md folders). Use for 写技能 / 做技能 / 把流程沉淀成 skill, packaging workflows, extracting reusable decisions from experience, or repairing skills that are ignored, generic, rigid, or unstable. Includes deciding which parts belong in a skill; one-off prompt design and standalone wording edits belong to prompt engineering."
+when_to_use: "Use for skill design, consolidation, diagnosis, and maintenance, including the wording and placement decisions required by that work."
 ---
 
 # Skill Authoring
 
-Turn useful experience, knowledge, and user standards into instructions another
-agent can apply. Start with the behavior or capability the skill should add;
-choose the document structure after discovering what needs to be carried forward.
+Build guidance that helps a future agent choose well in the intended situation.
+Extract the condition that changes the right action, place that guidance where it
+will be available, and check both sides of the condition. Apply this same standard
+when revising this authoring skill.
 
-## 1. Establish the intended difference
+## 1. Establish the task and evidence
 
-Recover the task class, requested scope, target agent/tools, and an observable
-good result. Use available artifacts and user corrections before asking questions.
-Ask only for missing information that would change the design; continue independent work.
+Recover the task class, requested scope, target environment, and observable good
+result from available artifacts and user corrections. Ask for missing information
+when its answer changes the design; otherwise proceed with a narrow assumption.
+For revisions, read existing instructions, resources, and maintenance records before
+changing rules so established requirements and rejected approaches remain visible.
 
-Identify the kind of work:
+- **Create / distill:** identify what ordinary execution misses. Without a baseline,
+  treat the suspected gap as a hypothesis; explicit user methods can still be encoded.
+- **Consolidate / migrate:** preserve useful decisions, knowledge, examples, and tools.
+  Equivalent behavior in the new environment can be the complete goal.
+- **Review / repair:** compare the complaint with actual inputs, outputs, and available
+  traces. Locate the earliest visible divergence; successful runs are counter-evidence
+  to a blanket failure claim. Mark uncertain causes and outcomes as uncertain.
 
-- **Create / distill:** what does an ordinary attempt miss, and what should change?
-  If no baseline exists, state the suspected gap as a hypothesis.
-- **Consolidate / migrate:** what already works, what must travel with the skill,
-  and which dependencies prevent reuse? Preserve established decisions, facts,
-  examples, and tools. Portability with equivalent behavior can be the whole goal.
-- **Review / revise:** compare the user's complaint with the actual artifact and
-  available runs. Locate the failure before prescribing edits; a good result is
-  counter-evidence to a proposed diagnosis, even if it came from a strong model.
+Define the intended difference: better decisions or output, less needless work,
+or preserved behavior after relocation. An existing prompt, tool, or skill may
+already meet that need; reuse it when no additional capability is needed.
 
-Define what would count as improvement: output quality, fewer recurring errors,
-less user intervention, or successful reuse in a new environment. A passing task
-alone does not show that a skill helped. If the existing prompt, tool, or skill
-already covers the need, explain that finding instead of manufacturing a new skill.
+## 2. Derive the decision and choose its home
 
-## 2. Recover the decisions worth preserving
+For each consequential choice, identify the observable cue, plausible actions,
+criterion that selects between them, and result that would verify the choice.
+Change the cue in a nearby case: when should the action change? This contrast
+defines the decision boundary. These are authoring questions, not required headings.
 
-Read [the worked example](references/worked-example.md) when constructing a new
-procedure or when a draft contains only generic phases.
+When a failure suggests a new warning, first locate the decision that produced it.
+A missing condition calls for a branch; missing knowledge calls for context; a
+mechanical failure calls for a tool repair. Merge related incidents into the same
+decision where they share a cause. Keep incidental names, chronology, and raw
+failure records in maintenance evidence. Retain useful domain facts and examples
+when they enable the runner to recognize the condition.
 
-Use real runs, accepted artifacts, user corrections, requirements, and domain
-references. For traces, retain known outcome labels; mark unknown outcomes unknown.
-If evidence is missing, execute a representative task when feasible, or draft from
-explicit requirements and label untested choices. A transcript is not a prerequisite
-for packaging an existing knowledge base or implementing a user's stated method.
+Choose placement by lifetime, frequency across tasks, and enforcement needs:
 
-For each consequential choice, recover:
+- **Current prompt:** the particular request, inputs, and one-time exceptions.
+- **Project context, such as AGENTS.md or the host equivalent:** stable project
+  information needed across many tasks, including short pointers to maintained
+  documents and commands. Scope it to the relevant project or directory.
+- **Skill:** reusable knowledge or procedures needed for a recognizable task class;
+  load substantial conditional detail through references.
+- **Tools / configuration:** deterministic checks, schemas, permissions, formatting,
+  or repeated mechanics. Context carries the invocation and judgment needed to use
+  them. A new runtime mechanism needs an evidenced gap or a concrete requirement.
+- **Maintenance / eval:** source traces, rationale, rejected changes, and regression
+  fixtures. Preserve diagnostic detail here, outside the install unit.
 
-- **Cue:** what feature of the input or intermediate result mattered?
-- **Decision:** what action was selected, and over which plausible alternative?
-- **Reason:** what criterion or constraint makes that choice appropriate?
-- **Boundary:** when would another action be better?
-- **Check:** what observable result would show the choice worked?
+A recurring project workflow can still belong in a skill when most project tasks
+do not need it. Split mixed requests across homes and keep each rule at its source;
+existing authorization determines which files or configuration may actually change.
+If the requested package needs a dependency elsewhere, preserve or identify it.
 
-These are authoring questions, not mandatory headings in the generated skill.
-Distinguish essential decisions from incidental chronology. Preserve useful recovery
-logic from failed attempts while removing the exploratory transcript. A successful
-run supports a candidate procedure; it does not prove every step was necessary.
+Admit an instruction when it changes a relevant decision or satisfies an explicit
+user, domain, or consumer requirement. For an extra restriction, identify the
+consequential failure it prevents and the gap left by existing instructions or
+tools. If that gap is absent, omit the restriction. Prefer the desired action and
+recovery path; retain negative boundaries when they communicate a real distinction.
+Positive wording alone does not justify a constraint.
 
-Retain knowledge that enables a decision: definitions, domain facts, user preferences,
-contrasting examples, schemas, or tested code. For an established workflow, reuse
-its sound material directly rather than translating everything into new prose.
+Read [the worked example](references/worked-example.md) when source material or
+accumulated warnings are difficult to turn into decisions.
 
-## 3. Write the smallest sufficient working package
+## 3. Encode the working procedure
 
-Use [anatomy](references/anatomy.md) for packaging and routing. Write the core
-decision procedure first, then describe when it should load.
+Write the core decisions, then the description that makes the skill discoverable.
+Use [anatomy](references/anatomy.md) when packaging, relocating, or changing routing.
 
-- Replace generic directions such as "analyze carefully" with the criteria that
-  determine the next action. Keep familiar steps when their order or checkpoint
-  addresses a real need; omit reminders that add no useful direction.
-- Choose the useful representation: ordered steps for fixed sequences, branches
-  for conditional choices, examples for judgment, scripts for repeatable mechanics.
-  Put substantial runtime knowledge in linked references with clear loading cues.
-- Preserve exact syntax and ordering where execution depends on them. For variable
-  steps, state what observation changes the action. Repair a recoverable precondition,
-  choose a valid fallback, or stop only the affected work when essential input is absent.
-- State the action to take. Use guards for evidenced failures, explicit requirements,
-  or concrete consequential risks; pair them with a replacement or recovery path.
-  Carry user authorization forward rather than inventing repeated approval steps.
-- Show what a useful result looks like and how to check it. Match verification to
-  the task: execution for code, inspection for rendered artifacts, source comparison
-  for factual work, or concrete criteria and user examples for judgment tasks.
-  Keep author-side evaluation machinery out of the generated runner's workflow.
+Use ordered steps where order affects correctness, branches where observations
+change the action, examples where a distinction is hard to recognize, and scripts
+for repeatable mechanics. Preserve exact syntax or ordering when execution depends
+on it. For missing prerequisites, recover or use a valid alternative; pause only
+the work that depends on an unresolved input or authorization.
 
-Length follows the task. Remove duplication and irrelevant material; retain an
-example or explanation when it changes a decision. There is no target line count.
+Keep shared decisions and loading cues in SKILL.md. Put substantial mode-specific
+knowledge in references and read it when that mode applies. Reuse sound existing
+material rather than translating it into new prose. Dependencies should be available
+in the target environment, with a fallback or a clear blocked condition if needed.
 
-## 4. Check the claimed improvement
+State the useful output and how to check it: execute code, inspect rendered artifacts,
+compare factual claims with sources, or apply concrete criteria to judgment tasks.
+Choose checks that establish the task's result; authoring experiments belong in
+maintenance, unless evaluation itself is the skill's runtime task.
 
-Use [evaluation](references/evaluation.md) before claiming validation. Select a
-typical task and a case that changes an important assumption. Test the actual package
-with the context a future runner will receive, in fresh sessions when available.
+Review this package using its own admission and placement decisions. Consolidate
+duplicate rules, replace vague reminders with actionable criteria, and remove
+unsupported restrictions. Keep examples and explanations that improve decisions;
+length follows their function rather than a fixed budget.
 
-For a new behavioral claim, compare with the same agent without the skill. For a
-revision, compare with the prior version; for migration, check behavior preservation
-and independence from the original location. Keep inputs, tools, and grading criteria
-comparable. Inspect quality and friction, not only completion or format compliance.
+## 4. Test the boundary and revise the mechanism
 
-Separate mechanical checks from agent behavior. If fresh execution or a baseline is
-unavailable, perform useful available checks, provide runnable cases, and report the
-missing comparison. A self-review or simulated walkthrough is not measured improvement.
-Ship an explicitly unvalidated candidate when appropriate to the user's request;
-do not claim stability from one or two successful examples.
+Read [evaluation](references/evaluation.md) for the comparison appropriate to the
+claim. Exercise the actual package with deployment-available context: a typical
+case, the reported failure where available, and a nearby case requiring a different
+action. For meta-skills, inspect the generated artifact and its downstream use.
+When selection changes, also test positive and neighboring requests in the host;
+forced loading tests execution, not discovery.
 
-## 5. Revise from the result
+Compare a new behavioral claim with ordinary execution, a revision with its prior
+version, or a migration with the original workflow. For a suspect legacy constraint,
+remove it in a comparison variant and check the original failure plus a normal case.
+Grade actual requirements, including a case where the boundary is necessary, so
+neither harmless freedom nor justified constraints are penalized.
 
-Read the skill's maintenance record when one exists. Choose the repair that
-addresses the observed problem:
+Use results to update the responsible decision in place. If the skill was unavailable,
+repair deployment or selection; if relevant context was absent, repair delivery;
+if the choice was wrong, refine its criterion or branch. Preserve working behavior.
+Use a coordinated rewrite when scattered rules cause the conflict; otherwise keep
+the repair local. A fixed incident plus a failing contrast signals overfitting.
 
-- **Not loaded / wrong skill:** check deployment first, then description overlap and
-  host selection behavior. Wording alone may not fix retrieval.
-- **Loaded but generic:** recover missing decisions or knowledge; remove redundant
-  advice. Consider that the agent may already handle this task without a skill.
-- **Wrong context / brittle procedure:** correct the applicability condition and
-  the branch or recovery action that depends on it.
-- **Harmful or burdensome:** remove or replace the responsible instruction; measure
-  whether the repair restores quality or reduces unnecessary work.
-- **Works as requested:** preserve it; distinguish proven scope from untested claims.
+## 5. Deliver with traceable evidence
 
-Make changes around a coherent failure mechanism so results remain interpretable.
-Use a coordinated rewrite when scattered patches are the mechanism; otherwise keep
-the repair narrow. Correct or retire failed rules rather than accumulating exceptions.
+Deliver the requested package or review, material decisions, checks performed, and
+remaining uncertainty. Distinguish structural checks, author walkthroughs, actual
+agent runs, and comparative evidence. When execution is unavailable, provide the
+candidate and runnable cases with the unverified claim stated explicitly.
 
-## 6. Deliver and retain maintenance evidence
-
-Deliver the skill folder or requested review, the consequential decisions, checks
-actually performed, and remaining uncertainty. For reviews, report findings and
-evidence without treating a proposed cause as an observed execution failure.
-
-Keep maintenance records outside the install unit, using the project's established
-location (otherwise a sibling `meta/<skill-name>/`). Record sources for consequential
-rule groups, observed failures, rejected changes, and evaluation results. Distinguish
-paper findings, field observations, user requirements, and design hypotheses. Preserve
-private source material in its private location; reference it without copying it into
-a public maintenance record. Record host/model boundaries when they affect behavior.
-
-Before delivery, check that the package has useful decision content, a discriminating
-description, resolvable resources, task-appropriate verification, and an honest account
-of what was tested. Maintenance records and test scaffolding stay outside the package.
+Keep maintenance outside the install unit in the existing project location, or a
+sibling meta/<skill-name>/. Record the source and strength of consequential decisions,
+their applicability, compared versions, actual outputs/traces, and remaining limits.
+Keep private evidence at its private source. Retain enough detail to revisit a rule
+without loading historical incidents into every runtime session.

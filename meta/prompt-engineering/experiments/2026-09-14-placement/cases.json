@@ -1,0 +1,14 @@
+{
+  "author_context": "Revised skills/prompt-engineering/SKILL.md and its runtime references. Separate draft-only deliverables; no installs or external actions.",
+  "author_requests": [
+    "请帮我写一个今天用的 prompt，把会议笔记改成进展、待办和阻塞清楚的更新，格式随意。",
+    "Help me prepare instructions for agents working in my repository. All code must remain compatible with Python 3.12; lint is `uv run ruff check .`, already enforced in CI. Only monthly releases need the workflow: inspect migration files, separate backward-compatible migrations from breaking ones, and choose a staged release for breaking changes; ordinary daily work doesn't need that procedure. Today's task is just fix a typo in docs. Give me the usable instruction drafts and where each belongs.",
+    "I need a prompt and execution recommendation for an agent to inspect an unfamiliar repository, discover which API models the configured provider supports using an existing credential, update the config, and probe the selected models. Existing host policy protects secrets and unrelated edits. Available choices are Fast (tool-capable; strong at bounded edits; weaker multi-step diagnosis) and Deep (same tools, stronger multi-step diagnosis); each has low and high effort. The task might end with a one-line diff. Draft the prompt and advise which setup to run."
+  ],
+  "runner_context": "First generated text-fenced prompt in author-output.md, plus each notes packet; no authoring skill or maintenance context.",
+  "runner_notes": [
+    "林已经修好了登录重试错误，测试通过。林周五更新操作文档。导入功能等供应商确认字段定义，负责人和回复时间还没有确定。有人提议改用另一个供应商，尚未决定。",
+    "本次只讨论了页面配色，没有形成决定，也没有分配后续工作。"
+  ],
+  "comparison": "Candidate only, no baseline; output inspected by the author."
+}

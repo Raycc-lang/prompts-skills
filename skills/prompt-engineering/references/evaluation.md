@@ -57,6 +57,20 @@ Do not force neutrality onto advocacy tasks. If the task is explicitly to make t
 case for one side, test faithfulness to that goal instead of penalizing directional
 coverage.
 
+## Check instruction placement
+
+For placement revisions, use cases that differ in lifetime and breadth: a one-time
+request, a fact needed across project tasks, and a recurring procedure used only for
+one task class. Include a mixed request and an existing tool-enforced requirement.
+Inspect whether the authored result keeps usable task instructions, scopes persistent
+guidance correctly, and avoids duplicating tool rules or dropping required context.
+
+Then exercise the produced instructions with the context their chosen home provides.
+For a skill, check discovery separately from forced-loaded execution using positive
+and neighboring requests in the actual host. For project context, confirm its scope
+and availability. Report untested deployment behavior separately from a sensible
+placement recommendation.
+
 ## Execute in the intended context
 
 A test run submits the prompt to a model in the role and context that deployment uses.

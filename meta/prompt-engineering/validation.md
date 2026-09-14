@@ -148,3 +148,47 @@ available setting rather than require literal `low/medium/high/extra-high` names
 No controlled cross-model, cross-effort, latency, or cost benchmark was run. The new
 rules are structurally validated and ready for fresh-session testing, not empirically
 proven to select the globally optimal model for every host.
+
+# Validation — 2026-09-14 — placement and retained capabilities
+
+## Checks performed
+
+Frontmatter, names, description lengths, runtime Markdown resource links, and diff
+whitespace passed. The repository-specific optional when_to_use field is preserved.
+The entrypoint changed from 16,250 bytes / 245 lines to 9,807 bytes / 147 lines.
+Action guidance remains in the runtime package as a selectively loaded reference.
+
+A fresh author session received the revised runtime package and three requests:
+a one-off meeting-update prompt; a mixed repository/runtime/release/typo request;
+and an unfamiliar API-configuration task with supplied fictional Fast/Deep model
+capabilities and low/high effort settings. It returned usable drafts without external
+actions. Exact output is in
+[author output](experiments/2026-09-14-placement/author-output.md).
+
+Observed: the one-off remained a prompt; the mixed request separated project-wide
+compatibility and lint invocation from the monthly skill and today's typo task,
+leaving existing CI enforcement intact. The third response preserved discovery,
+execution, recovery, and verification and selected Deep/high for dependent diagnosis
+despite the possible one-line diff. Model names in that fixture are hypothetical.
+
+A separate runner executed the generated meeting prompt on two input packets.
+It preserved completion and the Friday owner/date, kept an unaccepted supplier change
+as a proposal, reported missing follow-up ownership/timing without inventing it, and
+handled notes with no decisions or assigned work. Exact output is in
+[runner output](experiments/2026-09-14-placement/runner-output.md).
+The author inspected substantive coverage; this was not blinded grading.
+
+## Reproduction inputs and limits
+
+Use the packets in [cases](experiments/2026-09-14-placement/cases.json).
+Both sessions used the host-inherited model/configuration; the exact model identifier
+was not recorded. Only the skill/runtime references and task packet were supplied
+to the author; only its generated meeting prompt and notes were supplied downstream.
+Author instructions to save outputs were sent afterward without asking for revisions.
+
+These are candidate-only smoke tests. No prior-version comparison, live provider task,
+automatic host selection, actual AGENTS.md loading, cross-model comparison, or installed
+copy synchronization was performed. Placement and artifact decisions were exercised,
+not deployment reliability or measured superiority. This exercise does not establish
+that every generated instruction is necessary. Removal comparisons remain a supported
+evaluation method, not a claimed experiment run in this revision.

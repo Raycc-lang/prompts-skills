@@ -1,0 +1,12 @@
+{
+  "author_context": "Revised skills/skill-authoring/SKILL.md and runtime references; draft-only complete SKILL.md and short explanation; no installations or external actions.",
+  "author_request": "Please refactor our report-comparison skill. It accumulated these rules: 'Never recommend the cheapest vendor. Never compare prices before checking deployment. Never stop just because an answer is missing. Always use paragraphs. Never use tables.' Our actual policy: mandatory deployment requirements determine eligibility; preferences affect ranking. Missing support evidence is unknown rather than proof of incompatibility. Investigate unknowns that could change the recommendation, continue independent comparison work, and disclose remaining uncertainty. Price may decide among eligible options. Human readers accept any clear format; a separate importer, only when explicitly requested, requires fields vendor,status,reason in JSON and already has schema validation. One prior output chose a cheap vendor that was documented incompatible with a mandatory requirement. Another prior output stopped all comparison because one vendor's documentation was missing. Please produce the reusable skill. We have no tools for contacting vendors in this task.",
+  "runner_context": "Only the generated report-comparison procedure extracted from author-output.md, plus the four case packets. Draft-only, no network or vendor contact.",
+  "runner_requests": [
+    "On-premises deployment is mandatory, and lower price is preferred. Aster costs 10, documentation explicitly says cloud-only. Birch costs 20, technical documentation confirms on-premises support. Cedar costs 8, deployment documentation is absent; no further sources are available. Compare and recommend.",
+    "Same facts, except on-premises deployment is merely preferred, not mandatory. Minimizing price is the highest priority; cloud-only deployment is acceptable. Compare and recommend from confirmed facts, noting material unknowns.",
+    "On-premises mandatory and lower price preferred. Aster costs 10 with documented on-premises support, Birch costs 20 with documented on-premises support. Compare and recommend.",
+    "Explicit importer request with this supplied schema: JSON array of objects, each with exactly vendor, status, reason; status must be eligible, ineligible, or pending. Use Case A facts. Return the importer output."
+  ],
+  "comparison": "Candidate only, no baseline; substantive output inspected by the author, importer JSON checked mechanically."
+}

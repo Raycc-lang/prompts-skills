@@ -47,10 +47,9 @@ description: "<What it accomplishes>. Use when <recognizable requests>. <Relevan
 <Include when it clarifies a difficult choice; link larger material with a loading cue.>
 ```
 
-The skeleton is not a required output schema. A reference lookup skill may need
-a selection guide rather than a sequence.
-Leave out sections that do not help the runner. Do not expose authoring questions,
-provenance tables, or evaluation rubrics as user-facing output by default.
+Choose the form that carries the decisions: a reference lookup may need a selection
+guide rather than this sequence. Include sections that help the runner, and expose
+authoring questions or evaluation rubrics only when they serve the requested output.
 
 ## Description
 

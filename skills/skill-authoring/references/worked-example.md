@@ -61,6 +61,23 @@ software runtime check. The decision table above is authoring scaffolding; the s
 procedure is enough for this runner. Keep a contrasting example only if it helps
 distinguish unknown from incompatible in actual use.
 
+## Refactor warnings into a boundary
+
+Suppose later edits append "Never recommend the cheapest vendor", "Never omit price",
+and "Never stop for missing documentation." Recover their shared decision instead:
+establish eligibility, seek decisive missing evidence while continuing independent
+work, then rank eligible options. A cheap compatible vendor can win; an incompatible
+one cannot satisfy a mandatory requirement. A decisive unknown may leave that option
+pending without blocking comparisons supported by complete evidence.
+
+Keep this procedure in a vendor-comparison skill if it is reused for that task class.
+Keep today's vendors and requirements in the current prompt. A stable deployment
+constraint needed across the project can live in project context and be supplied to
+the comparison. If an importer enforces required fields, keep its schema in tooling
+and give the runner the field meanings and invocation. Keep the rejected drafts in
+maintenance. These placements follow use and enforcement needs, not the mere fact
+that all of them were mentioned in one incident.
+
 ## Probe whether it adds value
 
 Give a fresh runner three fictional vendor records: cheap/incompatible,

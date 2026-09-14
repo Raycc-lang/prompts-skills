@@ -264,3 +264,22 @@ Private source content remains in its original workspace; only this finding is r
 | Routing and conditional dependencies | Host-dependent packaging contract, F5, FO2's missing-dependency repair; names are not globally forbidden. |
 
 The implementation and validation limits are in [revision notes](revision-notes.md).
+
+## 2026-09-14 decision-boundary refactor
+
+Source: Ray's explicit request to correct incident-driven rule accumulation and the
+supplied review of both meta-skills. Status: user-approved engineering design.
+The earlier cue/decision/boundary procedure is retained and connected to intervention
+selection, instruction placement, and contrasting tests. The hypothesized benefit is
+better generalization with fewer unsupported constraints; this is not established by
+textual inspection or the studies above.
+
+An observed incident supports investigating a decision, not automatically banning the
+surface behavior. A nearby case can reveal when that behavior is appropriate. Context
+delivery or deterministic enforcement may own the repair instead of runtime prose.
+Negative wording remains appropriate for meaningful boundaries. This qualification also
+applies to the historical FO1 positive-wording interpretation.
+
+Historical crosswalks remain as provenance. The current workflow and comparison design
+are described in the 2026-09-14 revision notes; actual runs and untested claims are in
+validation.

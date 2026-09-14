@@ -130,3 +130,21 @@ prose without tables, preserve that preference as a requirement for this task.
 Judge the need for each restriction by the task and consequence, not its negative
 wording. "Use paragraphs only" would impose the same unsupported restriction as
 "Do not use tables" in the original packet.
+
+## Example 5: one request, several instruction homes
+
+User request: "Help agents in this repository keep compatibility with our supported
+runtime, perform our monthly release review, and fix today's documentation typo."
+The release review compares migrations and chooses staged rollout for breaking changes.
+Ordinary repository tasks rarely need that procedure. CI already enforces formatting.
+
+Place the stable runtime compatibility requirement and relevant check commands in
+scoped project context. Package release decisions as a task-specific skill when that
+workflow is to be reused. Keep the current typo and its requested correction in the
+one-off prompt. Formatting rules remain in the formatter/CI configuration; context
+can point to the command. Maintenance keeps any failure traces and evaluation cases.
+
+If the user only wanted today's typo prompt, write that prompt using the existing
+project context. Recurrence in the background does not authorize creating additional
+files. If the repeated request is only "summarize these supplied notes", a reusable
+prompt template may suffice without a skill package.
