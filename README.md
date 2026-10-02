@@ -19,11 +19,13 @@ templates/       Starting points for new skills and prompts
 
 | Skill | What it does |
 |---|---|
-| [`prompt-engineering`](skills/prompt-engineering/) | Create, improve, debug, grade, or evaluate prompts, system instructions, and skill files. |
+| [Ray’s Prompt Wording](skills/ray-prompt-wording/) (`ray-prompt-wording`) | Write or edit prompts that express Ray’s intended request clearly and faithfully. |
 | [`skill-authoring`](skills/skill-authoring/) | Author, distill, revise, or diagnose agent skills, grounded in evidence for when skills help and why they fail. |
 | [`edit-my-writing`](skills/edit-my-writing/) | Edit English prose through ordered passes, then explain the changes so the edit is learnable. |
 | [`jiangou-learning-analysis`](skills/jiangou-learning-analysis/) | Analyze a learning goal, method, or material with the 渐构分析 framework. |
 | [`intensive-reading`](skills/intensive-reading/) | Decide whether a material deserves intensive reading and route it to the right session shape. |
+
+The former `prompt-engineering` skill is now `ray-prompt-wording`. See the [rename and design notes](meta/ray-prompt-wording/2026-10-02-rename-and-design.md) for the scope change and rationale. Existing installations using the old name should be replaced with the renamed folder.
 
 ## Installing the skills
 
@@ -33,14 +35,14 @@ Skills are discovered by directory. Copy or symlink the ones you want:
 
 ```bash
 # macOS / Linux
-ln -s "$PWD/skills/prompt-engineering" ~/.claude/skills/prompt-engineering
+ln -s "$PWD/skills/ray-prompt-wording" ~/.claude/skills/ray-prompt-wording
 ```
 
 ```powershell
 # Windows (run as admin, or enable Developer Mode)
 New-Item -ItemType SymbolicLink `
-  -Path "$env:USERPROFILE\.claude\skills\prompt-engineering" `
-  -Target "$PWD\skills\prompt-engineering"
+  -Path "$env:USERPROFILE\.claude\skills\ray-prompt-wording" `
+  -Target "$PWD\skills\ray-prompt-wording"
 ```
 
 Symlinking means edits in this repo take effect immediately. Use `cp -r` instead if you'd rather pin a copy.

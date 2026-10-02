@@ -1,6 +1,6 @@
 ---
 name: "skill-authoring"
-description: "Create, consolidate, revise, or review reusable agent skills (SKILL.md folders). Use for 写技能 / 做技能 / 把流程沉淀成 skill, packaging workflows, extracting reusable decisions from experience, or repairing skills that are ignored, generic, rigid, or unstable. Includes deciding which parts belong in a skill; one-off prompt design and standalone wording edits belong to prompt engineering."
+description: "Create, consolidate, revise, or review reusable agent skills (SKILL.md folders). Use for 写技能 / 做技能 / 把流程沉淀成 skill, packaging workflows, extracting reusable decisions from experience, or repairing skills that are ignored, generic, rigid, or unstable. Includes deciding which parts belong in a skill; one-off prompt wording and standalone wording edits belong to ray-prompt-wording."
 when_to_use: "Use for skill design, consolidation, diagnosis, and maintenance, including the wording and placement decisions required by that work."
 ---
 
