@@ -1,6 +1,6 @@
 ---
 name: ray-prompt-wording
-description: "Write or edit prompts to express Ray's intended request clearly and faithfully. Use for prompt wording, 写提示词, 润色提示词, or 优化 prompt when the deliverable is a usable prompt. Excludes running the prompt, benchmarking, model selection, workflow design, and ordinary human-facing prose editing."
+description: "Clarify Ray's intended outcome, write concise faithful prompts, and recommend a model and reasoning level for the task. Use for prompt wording, 写提示词, 润色提示词, 优化 prompt, or choosing a model/thinking level for a concrete task. Excludes executing the target task, benchmarking, workflow design, and ordinary human-facing prose editing."
 ---
 
 # Ray's Prompt Wording
@@ -17,9 +17,15 @@ Help Ray clarify the outcome he wants and express it in the shortest clear, fait
 - Add roles, stages, restrictions, scoring systems, output quotas, or approval requirements only when the user requests them or they resolve a concrete ambiguity or failure that would otherwise prevent the intended result. General usefulness or hypothetical unwanted behavior is not enough. Apply this test to positive requirements as well as prohibitions.
 - Ask one focused question only when unresolved ambiguity would materially change the request. Otherwise complete the edit using the available context.
 
-## Deliver the prompt
+## Choose a model and reasoning level
+
+- Consider the setup needed to carry out the task. When selection is requested or an open choice materially affects the result, read [model and effort selection](references/model-and-effort-selection.md) and recommend a suitable model and reasoning level. Respect a settled choice unless it cannot meet the task's requirements.
+- Keep this advice brief and outside the copyable prompt unless the prompt itself controls model routing. Recommending settings does not change them or require running the task.
+
+## Deliver the result
 
 - Return one ready-to-copy prompt in the requested language, otherwise the draft's language. Use only as much formatting as clarity requires.
+- If only model or reasoning-level advice is requested, give the recommendation without inventing a prompt.
 - Keep any brief explanation or optional substantive suggestion outside the prompt. Do not silently replace the user's goal with your preferred approach.
 - Before returning, check the revised text against the original request for lost requirements and unsupported additions. When the user corrects your interpretation, identify the broader distinction behind the correction and apply it throughout the draft. Treat their example as evidence of the problem, not necessarily its full extent. Preserve everything the correction does not invalidate.
 - Do not execute the prompt, run comparative trials, invoke reviewers, or create an evaluation workflow as part of wording work. If the user separately requests testing or workflow design, handle it as a separate task.

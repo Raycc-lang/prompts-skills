@@ -24,10 +24,11 @@ skill**; the model running the skill doesn't need it. Therefore:
 ## Entry points for modifying skills
 
 Use `ray-prompt-wording` (Ray’s Prompt Wording) to write or edit a usable prompt
-while preserving the user's intent. Use `skill-authoring` for creating,
+while preserving the user's intent, and to recommend a model and reasoning level
+for the task. Use `skill-authoring` for creating,
 diagnosing, revising, or reviewing skill packages, including decisions about
 which guidance belongs in the package. Prompt wording alone does not include
-running prompts, benchmarking, model selection, or workflow design.
+running prompts, benchmarking, or workflow design.
 Their maintenance records live at `meta/skill-authoring/` and
 `meta/ray-prompt-wording/`.
 

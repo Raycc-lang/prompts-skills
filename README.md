@@ -19,7 +19,7 @@ templates/       Starting points for new skills and prompts
 
 | Skill | What it does |
 |---|---|
-| [Ray’s Prompt Wording](skills/ray-prompt-wording/) (`ray-prompt-wording`) | Write or edit prompts that express Ray’s intended request clearly and faithfully. |
+| [Ray’s Prompt Wording](skills/ray-prompt-wording/) (`ray-prompt-wording`) | Clarify outcomes, write concise faithful prompts, and recommend a model and reasoning level. |
 | [`skill-authoring`](skills/skill-authoring/) | Author, distill, revise, or diagnose agent skills, grounded in evidence for when skills help and why they fail. |
 | [`edit-my-writing`](skills/edit-my-writing/) | Edit English prose through ordered passes, then explain the changes so the edit is learnable. |
 | [`jiangou-learning-analysis`](skills/jiangou-learning-analysis/) | Analyze a learning goal, method, or material with the 渐构分析 framework. |

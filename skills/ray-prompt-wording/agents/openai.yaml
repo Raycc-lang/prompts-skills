@@ -1,10 +1,9 @@
 interface:
-  display_name: Ray's Prompt Wording
-  short_description: Edit prompts clearly while preserving your intent
-  default_prompt: Use $ray-prompt-wording to clarify this prompt while preserving
-    my meaning and scope.
-  icon_small: assets/icon.svg
-  icon_large: assets/icon.svg
+  display_name: "Ray's Prompt Wording"
+  short_description: "Clarify prompts and choose a model and reasoning level"
+  default_prompt: "Use $ray-prompt-wording to clarify my goal, write a concise prompt, and recommend a model and reasoning level when useful."
+  icon_small: "assets/icon.svg"
+  icon_large: "assets/icon.svg"
 policy:
   products:
   - chatgpt
