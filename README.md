@@ -19,13 +19,13 @@ templates/       Starting points for new skills and prompts
 
 | Skill | What it does |
 |---|---|
-| [Ray’s Prompt Wording](skills/ray-prompt-wording/) (`ray-prompt-wording`) | Clarify outcomes, write concise faithful prompts, and recommend a model and reasoning level. |
+| [Ray’s Prompt Wording](skills/ray-prompt-wording/) (`ray-prompt-wording`) | Design and diagnose concise prompts, preserve independent analysis, choose one-off/reusable/agent use and instruction placement, and recommend a model and reasoning level. |
 | [`skill-authoring`](skills/skill-authoring/) | Author, distill, revise, or diagnose agent skills, grounded in evidence for when skills help and why they fail. |
 | [`edit-my-writing`](skills/edit-my-writing/) | Edit English prose through ordered passes, then explain the changes so the edit is learnable. |
 | [`jiangou-learning-analysis`](skills/jiangou-learning-analysis/) | Analyze a learning goal, method, or material with the 渐构分析 framework. |
 | [`intensive-reading`](skills/intensive-reading/) | Decide whether a material deserves intensive reading and route it to the right session shape. |
 
-The former `prompt-engineering` skill is now `ray-prompt-wording`. See the [rename and design notes](meta/ray-prompt-wording/2026-10-02-rename-and-design.md) for the scope change and rationale. Existing installations using the old name should be replaced with the renamed folder.
+The former `prompt-engineering` skill is now `ray-prompt-wording`. See the [rename notes](meta/ray-prompt-wording/2026-10-02-rename-and-design.md) for its history and the [capability restoration](meta/ray-prompt-wording/2026-10-03-capability-restoration.md) for the current scope. The restoration preserves useful prompt-design capabilities while keeping wording concise. Existing installations using the old name should be replaced with the renamed folder.
 
 ## Installing the skills
 

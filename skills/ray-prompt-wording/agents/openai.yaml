@@ -1,7 +1,7 @@
 interface:
   display_name: "Ray's Prompt Wording"
-  short_description: "Clarify prompts and choose a model and reasoning level"
-  default_prompt: "Use $ray-prompt-wording to clarify my goal, write a concise prompt, and recommend a model and reasoning level when useful."
+  short_description: "Design clear prompts and choose how to run them"
+  default_prompt: "Use $ray-prompt-wording to turn my goal into concise, effective instructions and recommend a model and reasoning level when useful."
   icon_small: "assets/icon.svg"
   icon_large: "assets/icon.svg"
 policy:

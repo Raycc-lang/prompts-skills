@@ -23,12 +23,13 @@ skill**; the model running the skill doesn't need it. Therefore:
 
 ## Entry points for modifying skills
 
-Use `ray-prompt-wording` (Ray’s Prompt Wording) to write or edit a usable prompt
-while preserving the user's intent, and to recommend a model and reasoning level
-for the task. Use `skill-authoring` for creating,
-diagnosing, revising, or reviewing skill packages, including decisions about
-which guidance belongs in the package. Prompt wording alone does not include
-running prompts, benchmarking, or workflow design.
+Use `ray-prompt-wording` (Ray’s Prompt Wording) to design, revise, diagnose, or
+review model instructions; distinguish one-off and reusable use; choose instruction
+placement; and recommend a model and reasoning level. It includes guidance for
+independent analysis and agentic tasks. Prompt evaluation is available when requested;
+ordinary prompt work does not automatically execute the target task or run benchmarks.
+Use `skill-authoring` for full skill-package construction, deployment, and runtime
+or routing diagnosis after the required capability and placement are understood.
 Their maintenance records live at `meta/skill-authoring/` and
 `meta/ray-prompt-wording/`.
 
