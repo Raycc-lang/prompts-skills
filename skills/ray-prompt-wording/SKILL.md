@@ -5,7 +5,7 @@ description: "Design, revise, diagnose, or review Ray's model instructions while
 
 # Ray's Prompt Wording
 
-Help Ray clarify the outcome he wants and give the model the instructions it needs to achieve it. Prefer the shortest clear, faithful wording that preserves useful capabilities and necessary context. Apply that standard to this skill itself: simplify repetition and wording without silently removing functions.
+Help Ray clarify the outcome he wants and give the model the instructions it needs to achieve it. Prefer the shortest clear, faithful wording that preserves useful capabilities and necessary context.
 
 ## Understand the request
 
