@@ -202,3 +202,37 @@ artifact behavior; historical unnecessary-constraint comparisons remain in place
 
 See the dated validation entry for actual runs and limits. The shorter entrypoint
 is an artifact measurement, not evidence of improved downstream quality.
+
+# Revision — 2026-10-09 — fact assertion and the concrete-obstacle test
+
+## Trigger
+
+Ray reported two failures from one prompt-review session (FO4): an unverifiable
+delivery mechanism was asserted as fact and injected into his own draft as a
+correction, and a guard clause was added against unsolicited action on an
+analysis-only request. Ray requested implementation of both repairs through
+skill-authoring.
+
+## Changes
+
+- Added a fact-assertion prohibition in Understand the request: product behavior,
+  system state, and the user's task configuration are stated as fact only when
+  user-stated or verifiable; otherwise keep the user's wording, mark the
+  assumption, or ask.
+- Operationalized 'concrete obstacle' in Write the smallest sufficient prompt:
+  the author must name the unwanted behavior and why it would occur; unsolicited
+  action by the target is not an obstacle when no action was instructed. The same
+  test now governs review findings about missing details in a draft.
+
+## Design boundaries
+
+- Does not revive the rejected 'observed failure required' direction: concrete
+  risks with a named mechanism still justify restrictions (FO1/FO2).
+- The fact prohibition covers deployment-specific facts, not established general
+  knowledge.
+- Single-incident basis; no failure-rate or downstream-quality claim.
+
+## Validation status
+
+Static checks and author-side walkthroughs only; see validation. The installed
+copy under `~/.agents/skills/` was synchronized in this revision.

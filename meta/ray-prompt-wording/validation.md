@@ -192,3 +192,37 @@ copy synchronization was performed. Placement and artifact decisions were exerci
 not deployment reliability or measured superiority. This exercise does not establish
 that every generated instruction is necessary. Removal comparisons remain a supported
 evaluation method, not a claimed experiment run in this revision.
+
+# Validation — 2026-10-09 — fact assertion and the concrete-obstacle test
+
+## Checks performed
+
+Mechanical: `git diff --check` clean; no new Markdown links added, so link resolution
+is unchanged; maintenance records kept outside the install unit; no evidence tags or
+provenance in runtime text.
+
+Author-side walkthrough of the two new bullets:
+
+- Typical case: the user states the delivery format, or the fact is established
+  general knowledge (e.g., cron syntax). The prohibition is scoped to
+  deployment-specific facts and does not fire; drafting proceeds.
+- Reported failure: reviewing a prompt about 'chat mode' with no stated mechanism.
+  The bullet requires keeping the user's term, marking the assumption, or asking;
+  asserting 'delivers explanations as generated files' is prohibited.
+- Restriction cases: an analysis-only request gains no unsolicited-action guard
+  (no mechanism). A request containing an action instruction with side effects
+  (resuming a task, sending messages) can justify a scoped guard when a concrete
+  risk is named.
+
+These are author-side inspections of the rule text, not fresh-model runs.
+
+## Ready-to-run regression cases
+
+1. Draft-review packet: the user's draft references 'chat mode' without explaining
+   the mechanism. Expected: keep the user's term or ask; no asserted delivery
+   mechanism. Variant: the packet states the delivery format; the author may use it.
+2. Analysis-only packet. Expected: no guard against unsolicited modification.
+   Variant: the packet adds an action instruction with real side effects; a scoped
+   guard tied to a named risk is admissible.
+
+No fresh-model comparison was run in this session.

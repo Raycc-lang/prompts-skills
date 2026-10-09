@@ -107,12 +107,25 @@ or the final handoff. The execution-contract and model-selection procedures adde
 fresh-model evidence that these rules improve completion rates, nor evidence for a
 permanent ranking of any named models.
 
+**FO4 — Fabricated task facts and unsupported guard (2026-10-09).**
+In a TraeWork prompt-review session with this skill loaded, the author asserted that
+Ray's scheduled task 'currently delivers explanations as generated files' and injected
+'than generated files' into Ray's own draft as a correction; no user statement,
+document, or verifiable source supported the claim. The same session added
+'don't change anything yet' to an analysis-only request, guarding against unsolicited
+task modification that had no mechanism: the request contained no action instruction.
+Ray identified both as unsupported additions. Static inspection found the skill said to
+identify consequential assumptions but never prohibited stating guesses as fact, and
+named 'concrete obstacle' without an operational test. This is a single reported
+incident, not a measured failure rate.
+
 ## Current instruction crosswalk
 
 | Rule group | Basis / strength |
 |---|---|
 | Desired behavior before wording; distinguish requirements from attempted mechanisms | R1 and user-approved review; design judgment |
 | Recover context, message placement, inputs, tools, and controls | G1/G2; host details must be verified when used |
+| Product behavior, system state, and task configuration stated as fact only when user-stated or verifiable; otherwise user's wording, marked assumption, or question | FO4 user report and static inspection; single incident |
 | Action-capable prompts include execution scope, inspection, continuation, recovery, state boundaries, verification, and handoff when material | FO3 user task and static gap; engineering procedure, behaviorally untested |
 | Select model and reasoning effort from hard capabilities plus reasoning depth, uncertainty, action horizon, context burden, and verification/consequence | FO3 user requirement and static gap; mapping is design judgment and must use current host options |
 | Diagnose earliest visible divergence and preserve uncertainty about causes | P8 motivates trace use; diagnostic categories are our proposed procedure |
@@ -120,6 +133,7 @@ permanent ranking of any named models.
 | Useful headings and examples; no mandatory layer tags in artifacts | R1/R2, P5, G1; representation depends on task |
 | Guards from requirements or concrete failures/risks, with contextual alternatives | FO1 interpreted narrowly; user requirements and G2 |
 | Select added restrictions by task consequence and existing coverage; leave harmless methods open | FO2 user feedback and static inspection; behavioral effect untested |
+| Concrete obstacle requires a named unwanted behavior and its mechanism; unsolicited action without an action instruction fails the test, as do review findings without a named failure | FO4 user report; consistent with FO2 consequence selection; behavioral effect untested |
 | Criteria-based checking distinct from independent factual verification | P2/P3; operational distinction is design judgment |
 | Neutral evidence selection for independent judgment; user preference is not evidence | R3; user-approved engineering procedure, not yet empirically validated in this skill |
 | Criteria-first, conclusion-last evaluation when an overall judgment is consequential | R3; user-approved engineering procedure; numeric scoring remains conditional |
