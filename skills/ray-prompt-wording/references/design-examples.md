@@ -2,6 +2,14 @@
 
 These examples illustrate decisions, not measured improvements or mandatory prompt formats.
 
+## Wording edit versus agent design
+
+For "Make this clearer and shorter: summarize the supplied article in plain English, preserving its caveats," refine the sentence directly. Its purpose and useful output are already established; an objective-setting interview adds no value.
+
+For "Write an agent prompt to improve my app," recover the desired user-visible change, authorized scope, and evidence of completion. Offer concrete objective options or ask a focused question when these cannot be inferred. Do not substitute your preferred feature, invented performance target, or passing test suite for the user's intended result. If those choices are already settled, encode them and proceed.
+
+For a failed run whose delivered prompt already clearly says to preserve caveats, inspect the missing caveat and available context. If no wording gap is visible, report that limit instead of adding "always preserve every caveat." A clearer sentence may still be useful when explicitly requested, but its behavioral benefit remains untested.
+
 ## Goal versus attempted method
 
 "Always ask five questions before drafting a customer reply" may be an attempt to prevent unsupported claims. If the facts are already complete, ask only for missing information that prevents a useful reply. If five questions are explicitly required for an intake form, preserve that requirement.

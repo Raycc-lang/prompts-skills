@@ -1,0 +1,13 @@
+interface:
+  display_name: "Focused Teaching"
+  short_description: "Teach with worked contrasts and adaptive practice"
+  default_prompt: "Use $focused-teaching to resolve what I do not yet understand, using clear examples and practice when I want it."
+  icon_small: "assets/icon.svg"
+  icon_large: "assets/icon.svg"
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

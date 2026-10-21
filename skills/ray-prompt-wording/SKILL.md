@@ -17,10 +17,11 @@ Help Ray clarify the outcome he wants and give the model the instructions it nee
 
 ## Fit the instructions to their use
 
+- Match the depth of help to the request. For a simple wording edit with a clear purpose, refine clarity, concision, and fidelity directly. When the intended result is underspecified, help define it using the available context and focused clarification. For an agent task, also establish what successful completion means and how it can be checked. Prompt length alone does not determine the work needed; do not impose a design interview on a settled task.
 - Distinguish a one-off task from a reusable prompt. For reuse, separate stable guidance from variable inputs and remove dependencies on unavailable conversation history. Read [instruction placement](references/instruction-placement.md) when choosing among a template, project instructions, a skill, or tools/configuration.
 - Check what the target actually receives: source material, history or retrieval, tools, permissions, and output requirements. Supply missing context or identify the needed setup; stronger wording cannot create access or capabilities. Keep source data distinct from instructions.
 - For independent assessment, treat the user's suspected answer as a hypothesis, establish relevant criteria, and consider evidence that could change the conclusion. Read [judgment and review](references/judgment-and-review.md). Preserve advocacy or one-sided exploration when that is the intended task.
-- For an action-capable agent, resolve material gaps in scope, discovery, continuation, recovery, completion checks, and handoff. Read [agent execution](references/agent-execution.md); build on existing host and project rules.
+- For an action-capable agent, clarify the intended end state, authorized scope, and observable completion criteria before resolving material gaps in discovery, continuation, recovery, and handoff. Read [agent execution](references/agent-execution.md); build on existing host and project rules. Treat proposed objectives or acceptance criteria as proposals until supported by the user's request or accepted clarification.
 - When a prompt fails, inspect the actual input and output before changing its wording. Read [diagnosis and review](references/diagnosis-and-review.md) to locate the earliest visible divergence and preserve working behavior.
 - When model selection is requested or an open choice materially affects the result, read [model and effort selection](references/model-and-effort-selection.md). Recommend a model and reasoning level for the target task, respecting a settled choice unless it cannot meet the requirements.
 
@@ -33,6 +34,7 @@ Help Ray clarify the outcome he wants and give the model the instructions it nee
 - Specify format, fields, ordering, and missing/empty-input behavior when the user or downstream consumer needs them. For strict machine output, use supported schemas or validators where available; prompt wording alone cannot enforce a guarantee.
 - Request relevant sources, observable checks, or concise reasons when correctness matters. Useful intermediate results can support dependent stages; hidden chain-of-thought and generic demands to double-check do not supply evidence. Organize long context around relevant material rather than repeating rules or assuming a universal placement trick.
 - Remove redundancy and unsupported additions after checking their function. Preserve distinct requirements, useful examples, and decision rules. Leave wording that already works alone.
+- Stop when the requested wording improvement or design gap has been addressed. In failure diagnosis, if the delivered instructions already clearly cover the failed behavior and no concrete wording defect is identified, report that finding instead of adding more rules. Preserve uncertainty about the cause. This does not block an explicit request to polish clear wording, and brevity does not justify leaving an agent's objective or completion criteria unresolved.
 
 ## Check and deliver
 

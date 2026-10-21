@@ -1,7 +1,6 @@
 ---
 name: "jiangou-learning-analysis"
-description: "Analyze any learning goal, study method, or learning material with the 渐构分析 (Gradual Construction Analysis) framework. Use when the user asks to design or critique a study plan, diagnose why their learning isn't working (memorized but can't apply, knows the formula but never thinks to use it, read it but can't retell it), extract a text's core knowledge as input/output structures, decide whether something should be memorized or trained, or generate practice materials and verification tests. Works for languages, math, programming, physical skills, and professional knowledge."
-when_to_use: "When the user wants to design or critique a study plan, diagnose why learning is not sticking (memorized but can't apply, knows the formula but never thinks to use it, read it but can't retell it), extract a text's core knowledge as input/output structures, decide between memorization and training, or generate practice materials and verification tests — across languages, math, programming, physical skills, and professional knowledge. Not for deciding whether a material deserves intensive reading before starting it."
+description: "Use the 渐构分析 (Gradual Construction Analysis) framework after the learner has chosen a learning direction: clarify the target ability, decompose it into sub-skills, design or critique practice and materials, diagnose learning difficulties, extract knowledge from selected material, and verify progress. A chosen direction can still need refinement; beginners need no prior failed attempt. Do not use to choose life or career priorities, decide whether a subject is worth learning, or decide whether material deserves intensive reading."
 ---
 
 # Jiangou Learning Analysis
@@ -24,80 +23,69 @@ borderline; it holds the rigorous definitions and admission tests.
 
 # Part I — Gates. Run these before analyzing.
 
-## Gate 0 — Route on what the available feedback cannot tell them
+## Gate 0 — Anchor the chosen direction and route the request
 
-First question, before any framework vocabulary: **what tells this learner they were
-wrong, how fast — and what does that signal leave undetermined?**
+Recover the learning direction from the request and conversation. Help turn a chosen
+direction into a usable target; do not require the learner to have already done the
+decomposition. "I want to explain technical problems in English" is sufficient to
+start refining the ability. "Should I learn English or programming?" requires a
+priority decision outside this framework. Keep hypothetical learning-cost estimates
+separate from deciding whether the goal is worthwhile.
 
-Feedback and analysis do different jobs. A compiler, a coach, or a puzzled listener
-reports *that* an attempt failed. None of them reports whether the decomposition is
-right, whether the material is paired, whether a concept boundary was imported from
-L1, or which sub-ability the errors keep landing on. Route on that difference, and
-say in one line which row you are in.
+Honor the requested analysis. For a plan or decomposition, proceed even if the
+learner already has useful feedback and is improving. For a specific failed attempt,
+use Part III's diagnosis route; for learning knowledge from selected text, lecture,
+or video, use its extraction route.
 
-| Situation | First move | Analysis still earns its place when |
-|---|---|---|
-| Fast, honest feedback available (compiler, test suite, coach, opponent, a listener who visibly doesn't understand) and the learner is still improving | Send them to the loop. Name the grader and a return condition. Don't spend the turn on structure the feedback will surface on its own. | progress stalls, one error class keeps recurring, or they can't tell why an attempt failed |
-| Same feedback, but plateaued or repeating one error class | Run the loop on that error class | this is the case for it |
-| Feedback slow, absent, or flattering — self-taught reading, theory, writing, judgment-heavy professional work | Run the loop. Here analysis substitutes for a missing error signal. | always |
-| A specific attempt just failed and can be described | Diagnosis routing — skip the analysis loop and go to Part III | |
-| A text, lecture, or video in hand | io-extraction routing | |
+For method choice or diagnosis, identify what tells the learner an attempt was wrong,
+how soon, and what that feedback leaves unresolved. Feedback can establish failure
+without identifying the missing sub-ability. When the question is simply what to do
+next and the current practice loop is working, recommend continuing it with a named
+grader and an observable return condition, such as a recurring error class. Do not
+substitute that advice for an explicitly requested structural analysis. Treat
+analysis without performance feedback as a hypothesis to verify, not a replacement
+for evidence of learning.
 
-Return conditions are observations, not durations: "come back when the same error
-repeats across sessions," not "come back in two weeks."
+Before diagnosing a structural learning failure, check relevant mundane causes such
+as a misread task, tooling, attention, or absent feedback. Use the pre-check and
+structural-evidence exception in `references/diagnosis-guide.md`. Do not impose this
+failure diagnosis on a beginner asking for a plan.
 
-**Mundane causes.** If a mundane cause is live — sleep, attention, a misread
-assignment, absent or delayed feedback, tooling, too little elapsed practice —
-address it first and defer structural diagnosis; running both at once confounds
-the structural conclusion. The full pre-check list and the structural-evidence
-exception are in `references/diagnosis-guide.md`.
+## Gate 1 — Gather the facts that change the recommendation
 
-## Gate 1 — Intake. Don't analyze on air.
+Use the conversation first. Establish the target use and current starting point;
+collect additional context only where it changes the requested work:
 
-Broad, useless output is caused by missing step-4 input, not by insufficient
-thinking. Four facts are the floor:
+- **Target use:** a concrete situation or kind of task the learner wants to handle.
+  Ongoing use and curiosity-driven understanding are valid; a date is optional.
+- **Starting point:** demonstrated abilities, prior experience, and relevant attempts.
+  For a beginner, use known prerequisites or offer a small initial task if needed.
+  Require an actual episode to diagnose a claimed failure, not to design a first plan.
+- **Feedback:** who or what can judge the result. If none exists, include a workable
+  grader or check in the design and acknowledge its limits.
+- **Practical constraints:** available materials, time, cadence, and any deadline
+  when these affect method selection or a requested schedule. A decomposition alone
+  does not require a time budget.
 
-1. **The use occasion** — one concrete, dateable situation where the ability gets
-   used. Not "for work," not "to read papers." "The Thursday standup where I explain
-   a design in English." "The 8/20 exam, section 3."
-2. **A real recent episode** — one attempt that went wrong, told as what happened,
-   not as a self-diagnosis. "I read the chapter twice and still couldn't start
-   problem 4" — not "I think I have a comprehension problem."
-3. **The grader** — who or what tells them their output is wrong, and how soon. If
-   the answer is "nothing," that is itself the most important finding and usually
-   outranks everything else in the analysis.
-4. **The budget** — minutes available, cadence, and the deadline if one exists.
+Ask a focused question when an unknown would materially change the recommendation.
+Continue useful independent work; mark assumptions and provisional choices. Do not
+invent learner errors or block the whole response because a fixed number of intake
+fields is missing. If the learner asks to proceed without clarification, use explicit
+assumptions and identify what observation would change the plan.
 
-**If two or more are missing: ask for them and stop.** Ask at most four questions.
-Do not attach a provisional analysis to the questions — a partial analysis in the
-same turn is exactly the broad output this gate exists to prevent.
+## Gate 2 — Match the scope to the request
 
-If the learner says to proceed without answering, proceed — but open with an explicit
-assumption list and mark every recommendation resting on one, so wrong assumptions
-are cheap to spot.
+**Plan or decomposition:** cover the chosen target's relevant sub-tasks, linking each
+to its method, material or grader, and verification. Recommend a starting point and
+sequence from prerequisites and demonstrated competence; explain the rationale.
+Do not require the learner to choose a sub-task before delivering the requested plan.
 
-**Proportionality.** The full floor applies to plan design and method choice, the
-requests that go generic without it. Scale down elsewhere: diagnosis needs facts 1
-and 2 (the guide's own interview covers the rest); a memorize-or-train question and a
-text extraction need only fact 1. Never let the gate cost more turns than the answer
-is worth.
+**Interactive practice:** carry one sub-task through steps 1–3, its method, and a
+step-7 test. Recommend the next useful sub-task and allow redirection; offer a choice
+when the learner's preference would materially change the route.
 
-## Gate 2 — Scope. One sub-task at a time by default.
-
-**Default — interactive coaching.** Carry ONE sub-task through steps 1–3, give the
-methods that verdict licenses, and one step-7 test. After step 2's decomposition,
-show the list and let the learner choose which goes first. This is right whenever the
-learner is about to go practice, because an unexecuted plan teaches nothing and a
-multi-part plan hides which part was wrong.
-
-**Full coverage — when the learner asks for it.** "Analyze my whole study plan,"
-"what abilities am I missing," "build me a curriculum," "compare these four
-sub-skills" are legitimate requests for breadth. Cover every sub-task, but hold each
-to the same four fields — type verdict · method · material or grader · test. Breadth
-comes from more rows, not longer rows. Close with which one to start on and why.
-
-**Single-turn.** "Should I memorize or train this?" gets step 0, the step-3 verdict,
-and one line on verification. Do not expand it into the loop.
+**Single decision:** "Should I memorize or train this?" gets step 0, the step-3
+verdict, and a matching verification check. Do not expand it into the full loop.
 
 ---
 
@@ -141,8 +129,8 @@ Split composite abilities into sub-tasks, each with its own input and output. Pr
 decompositions whose sub-tasks are real tasks occurring in actual use (horizontal
 split) over artificial drills that never occur in use (vertical split).
 
-Then apply gate 2: offer the list and let the learner pick, unless they asked for
-full coverage.
+Then apply gate 2: deliver the requested decomposition or plan; for interactive
+practice, select a justified starting sub-task and allow redirection.
 
 ### Step 3 — Type each sub-task
 
@@ -284,15 +272,18 @@ Each recommendation names four things:
 discrimination model," "get feedback" are placeholders. Each may appear only attached
 to a named object and a named learner fact.
 
-If a draft fails the bar, the fix is more intake, not more analysis.
+If a draft fails the bar, identify the missing learner fact or concrete practice
+resource. Recover it, ask a focused question, or narrow and label the provisional
+recommendation; more intake is useful only if its answer changes the advice.
 
 ## What the user receives
 
-- **Triage (gate 0, row one, or a live mundane cause)** — a few lines: the row, the
-  loop or the cause, the grader, the return condition. Nothing else, unless the
-  documented episode satisfies gate 0's independent structural-evidence exception.
+- **Triage when it answers the request** — the practice loop or relevant mundane
+  cause, the grader, and an observable return condition. Preserve an explicitly
+  requested plan or structural analysis.
 - **Plan design or critique** — the step-1 input/output statement, the step-3 verdict,
-  the methods it licenses, and the step-7 test that could falsify it. Scope per gate 2.
+  the methods it licenses, and the step-7 test that could falsify it. Include a
+  justified sequence when requested. Scope per gate 2.
 - **Diagnosis** — the failure pattern, the episode it was read from, the component
   actually missing, and a fix for that component only. Say which components are
   healthy, so the learner stops re-drilling them.
@@ -314,7 +305,7 @@ If a draft fails the bar, the fix is more intake, not more analysis.
   maps the evidence to it: name the rule, show the calculation. Otherwise prescribe
   what to measure and how to adjust from the result — a placeholder number will be
   mistaken for analysis.
-- **Cheapest live fix wins.** If a gate-0 row resolves the request, that is the
+- **Cheapest live fix wins.** If gate-0 triage resolves the request, that is the
   answer. Do not append the full structure for completeness.
 - When extracting knowledge from a text, have the learner retell the I/O table, not
   the text. The retell is the comprehension exercise, not the step-7 test — a
