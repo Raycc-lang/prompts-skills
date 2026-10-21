@@ -1,0 +1,24 @@
+{
+  "name": "jiangou-learning-analysis",
+  "version": "0.1.0",
+  "description": "Break down a chosen learning direction into abilities, suitable practice, and progress checks.",
+  "author": {
+    "name": "Ray",
+    "url": "https://github.com/Raycc-lang"
+  },
+  "repository": "https://github.com/Raycc-lang/prompts-skills",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Jiangou Learning Analysis",
+    "shortDescription": "Break down a chosen learning direction into abilities, suitable practice, and progress checks.",
+    "longDescription": "Break down a chosen learning direction into abilities, suitable practice, and progress checks.",
+    "developerName": "Ray",
+    "category": "Productivity",
+    "defaultPrompt": [
+      "I have chosen what to learn. Break it into sub-skills and a practical learning sequence.",
+      "Analyze this learning difficulty and propose targeted practice and checks."
+    ],
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

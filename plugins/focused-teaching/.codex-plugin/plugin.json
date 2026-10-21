@@ -1,0 +1,24 @@
+{
+  "name": "focused-teaching",
+  "version": "0.1.0",
+  "description": "Learn through clear explanations, worked contrasts, and practice adapted to your understanding.",
+  "author": {
+    "name": "Ray",
+    "url": "https://github.com/Raycc-lang"
+  },
+  "repository": "https://github.com/Raycc-lang/prompts-skills",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Focused Teaching",
+    "shortDescription": "Learn through clear explanations, worked contrasts, and practice adapted to your understanding.",
+    "longDescription": "Learn through clear explanations, worked contrasts, and practice adapted to your understanding.",
+    "developerName": "Ray",
+    "category": "Productivity",
+    "defaultPrompt": [
+      "Explain the distinction I am missing, building on what I already understand.",
+      "Teach me this concept with worked examples, then guide me through practice."
+    ],
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

@@ -1,0 +1,13 @@
+interface:
+  display_name: "Jiangou Learning Analysis"
+  short_description: "Break down a chosen learning goal and design practice"
+  icon_small: "assets/icon.svg"
+  icon_large: "assets/icon.svg"
+  default_prompt: "Use $jiangou-learning-analysis to break down my chosen learning direction into abilities, practice, and checks."
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

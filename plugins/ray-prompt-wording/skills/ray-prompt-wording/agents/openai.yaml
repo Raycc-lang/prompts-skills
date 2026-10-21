@@ -1,0 +1,13 @@
+interface:
+  display_name: "Ray's Prompt Wording"
+  short_description: "Refine wording, clarify objectives, and define completion"
+  default_prompt: "Use $ray-prompt-wording to refine my prompt, clarifying objectives and completion criteria when needed."
+  icon_small: "assets/icon.svg"
+  icon_large: "assets/icon.svg"
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

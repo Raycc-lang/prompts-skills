@@ -1,0 +1,28 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ray-prompt-wording",
+  "version": "0.1.0",
+  "description": "Refine prompt wording, clarify agent objectives and completion, and diagnose failures.",
+  "author": {
+    "name": "Ray",
+    "url": "https://github.com/Raycc-lang"
+  },
+  "repository": "https://github.com/Raycc-lang/prompts-skills",
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Ray's Prompt Wording",
+        "shortDescription": "Refine prompt wording, clarify agent objectives and completion, and diagnose failures.",
+        "longDescription": "Refine prompt wording, clarify agent objectives and completion, and diagnose failures.",
+        "developerName": "Ray",
+        "category": "Productivity",
+        "defaultPrompt": [
+          "Make this prompt clearer and more concise while preserving my meaning.",
+          "Help define the objective and completion criteria for this agent prompt."
+        ],
+        "composerIcon": "./assets/icon.svg",
+        "logo": "./assets/icon.svg"
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "name": "ray-prompts-skills",
+  "interface": {
+    "displayName": "Ray's Prompt and Learning Skills"
+  },
+  "plugins": [
+    {
+      "name": "ray-prompt-wording",
+      "source": {
+        "source": "local",
+        "path": "./plugins/ray-prompt-wording"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "focused-teaching",
+      "source": {
+        "source": "local",
+        "path": "./plugins/focused-teaching"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    },
+    {
+      "name": "jiangou-learning-analysis",
+      "source": {
+        "source": "local",
+        "path": "./plugins/jiangou-learning-analysis"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

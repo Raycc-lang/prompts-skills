@@ -28,6 +28,18 @@ templates/       Starting points for new skills and prompts
 
 The former `prompt-engineering` skill is now `ray-prompt-wording`. See the [rename notes](meta/ray-prompt-wording/2026-10-02-rename-and-design.md) for its history and the [capability restoration](meta/ray-prompt-wording/2026-10-03-capability-restoration.md) for the current scope. The restoration preserves useful prompt-design capabilities while keeping wording concise. Existing installations using the old name should be replaced with the renamed folder.
 
+## ChatGPT plugins
+
+Three skills are also packaged as separate, self-contained plugins:
+[Ray's Prompt Wording](plugins/ray-prompt-wording/),
+[Focused Teaching](plugins/focused-teaching/), and
+[Jiangou Learning Analysis](plugins/jiangou-learning-analysis/).
+Resume Workflow is excluded.
+
+See [plugin installation and maintenance](docs/plugins.md) for the ChatGPT web
+Plugin Creator flow and the separate local marketplace route. Packaging in this repo
+does not automatically install a plugin in your ChatGPT account.
+
 ## Installing the skills
 
 Skills are discovered by directory. Copy or symlink the ones you want:
