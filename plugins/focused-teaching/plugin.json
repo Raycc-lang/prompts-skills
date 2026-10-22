@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "focused-teaching",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Learn through clear explanations, worked contrasts, and practice adapted to your understanding.",
   "author": {
     "name": "Ray",
@@ -12,10 +12,10 @@
     "com.openai": {
       "interface": {
         "displayName": "Focused Teaching",
-        "shortDescription": "Learn through clear explanations, worked contrasts, and practice adapted to your understanding.",
+        "shortDescription": "Clear, adaptive teaching",
         "longDescription": "Learn through clear explanations, worked contrasts, and practice adapted to your understanding.",
         "developerName": "Ray",
-        "category": "Productivity",
+        "category": "Education & Research",
         "defaultPrompt": [
           "Explain the distinction I am missing, building on what I already understand.",
           "Teach me this concept with worked examples, then guide me through practice."

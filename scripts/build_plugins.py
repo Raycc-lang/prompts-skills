@@ -9,11 +9,13 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 REPOSITORY = "https://github.com/Raycc-lang/prompts-skills"
 PLUGINS = {
     "ray-prompt-wording": {
         "display_name": "Ray's Prompt Wording",
+        "subtitle": "Clear prompts and agent goals",
+        "category": "Productivity",
         "description": "Refine prompt wording, clarify agent objectives and completion, and diagnose failures.",
         "prompts": [
             "Make this prompt clearer and more concise while preserving my meaning.",
@@ -22,6 +24,8 @@ PLUGINS = {
     },
     "focused-teaching": {
         "display_name": "Focused Teaching",
+        "subtitle": "Clear, adaptive teaching",
+        "category": "Education & Research",
         "description": "Learn through clear explanations, worked contrasts, and practice adapted to your understanding.",
         "prompts": [
             "Explain the distinction I am missing, building on what I already understand.",
@@ -30,6 +34,8 @@ PLUGINS = {
     },
     "jiangou-learning-analysis": {
         "display_name": "Jiangou Learning Analysis",
+        "subtitle": "Turn learning goals into plans",
+        "category": "Education & Research",
         "description": "Break down a chosen learning direction into abilities, suitable practice, and progress checks.",
         "prompts": [
             "I have chosen what to learn. Break it into sub-skills and a practical learning sequence.",
@@ -52,13 +58,21 @@ def plugin_files(name: str, config: dict) -> dict[Path, bytes]:
         if path.is_symlink():
             raise ValueError(f"Package sources must be regular files: {path}")
         if path.is_file():
-            files[Path("skills") / name / path.relative_to(source)] = path.read_bytes()
+            # Standalone-skill product labels differ from portable plugin labels.
+            # Omit that host-generated restriction; preserve invocation policy.
+            if path.relative_to(source) == Path("agents/openai.yaml"):
+                legacy = b"  products:\n  - chatgpt\n  - codex\n  - api\n  - atlas\n"
+                data = path.read_bytes().replace(legacy, b"")
+            else:
+                data = path.read_bytes()
+            files[Path("skills") / name / path.relative_to(source)] = data
+    assert len(config["subtitle"]) <= 30, name
     interface = {
         "displayName": config["display_name"],
-        "shortDescription": config["description"],
+        "shortDescription": config["subtitle"],
         "longDescription": config["description"],
         "developerName": "Ray",
-        "category": "Productivity",
+        "category": config["category"],
         "defaultPrompt": config["prompts"],
         "composerIcon": "./assets/icon.svg",
         "logo": "./assets/icon.svg",
@@ -78,7 +92,12 @@ def plugin_files(name: str, config: dict) -> dict[Path, bytes]:
     files[Path(".codex-plugin/plugin.json")] = encoded({
         **identity, "skills": "./skills/", "interface": interface,
     })
-    files[Path("assets/icon.svg")] = (source / "assets/icon.svg").read_bytes()
+    import re
+    icon = (source / "assets/icon.svg").read_text()
+    # Keep the artwork and viewBox; supply a supported listing size.
+    icon = re.sub(r'(<svg\b[^>]*\bwidth=")[^"]+(")', r'\g<1>96\2', icon, count=1)
+    icon = re.sub(r'(<svg\b[^>]*\bheight=")[^"]+(")', r'\g<1>96\2', icon, count=1)
+    files[Path("assets/icon.svg")] = icon.encode()
     return files
 
 
@@ -95,7 +114,7 @@ def expected_files() -> dict[Path, bytes]:
                 "name": name,
                 "source": {"source": "local", "path": f"./plugins/{name}"},
                 "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"},
-                "category": "Productivity",
+                "category": PLUGINS[name]["category"],
             }
             for name in PLUGINS
         ],
@@ -121,7 +140,7 @@ def main() -> int:
             for path in stale: print(f"Missing or stale: {path}", file=sys.stderr)
             for path in extra: print(f"Unexpected: {path}", file=sys.stderr)
             return 1
-        print(f"Verified {len(PLUGINS)} plugins: packaged skills match canonical sources.")
+        print(f"Verified {len(PLUGINS)} plugins: packaged instructions and portable metadata match their sources.")
         return 0
     # The three plugin directories contain generated files only; remove stale files.
     for relative in extra:

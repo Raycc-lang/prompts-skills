@@ -58,6 +58,11 @@ python scripts/build_plugins.py --check
 ```
 
 The three `plugins/<name>/` directories are generated; changes there are overwritten.
+The builder removes only the known legacy, host-generated product list from
+packaged `agents/openai.yaml`; it preserves invocation settings and every workflow
+instruction. Plugin listing icons reuse the existing artwork at 96 × 96 pixels.
+The source skill directories are unchanged by these packaging adaptations.
+
 Commit the source changes and generated packages together. Bump the package version
 in the builder when publishing an updated plugin version. Existing account plugins
 need an explicit update; a GitHub push does not update an imported snapshot by itself.
@@ -67,3 +72,16 @@ need an explicit update; a GitHub push does not update an imported snapshot by i
 - [Build plugins in ChatGPT](https://learn.chatgpt.com/docs/build-plugins)
 - [Package your plugin](https://developers.openai.com/plugins/build/plugins)
 - [Build skills](https://learn.chatgpt.com/docs/build-skills)
+
+## Current installation status
+
+On 2026-10-22, Plugin Creator was installed and its creation skill was available,
+but its `create_plugin` account-upload action was not exposed in the active session.
+The browser fallback could open the Plugins page but could not read its interface
+(`Debugger unattached`). No account plugin creation or installation was verified.
+
+The corrected version 0.1.1 packages are ready for Plugin Creator's account-save
+workflow. In a fresh conversation with Plugin Creator selected, ask it to install
+the three package directories from this repository. If `create_plugin` is still
+unavailable, treat the save as pending rather than creating a Site or rebuilding
+the workflows from summaries.

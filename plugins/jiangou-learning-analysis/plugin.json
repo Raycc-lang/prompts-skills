@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "jiangou-learning-analysis",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Break down a chosen learning direction into abilities, suitable practice, and progress checks.",
   "author": {
     "name": "Ray",
@@ -12,10 +12,10 @@
     "com.openai": {
       "interface": {
         "displayName": "Jiangou Learning Analysis",
-        "shortDescription": "Break down a chosen learning direction into abilities, suitable practice, and progress checks.",
+        "shortDescription": "Turn learning goals into plans",
         "longDescription": "Break down a chosen learning direction into abilities, suitable practice, and progress checks.",
         "developerName": "Ray",
-        "category": "Productivity",
+        "category": "Education & Research",
         "defaultPrompt": [
           "I have chosen what to learn. Break it into sub-skills and a practical learning sequence.",
           "Analyze this learning difficulty and propose targeted practice and checks."

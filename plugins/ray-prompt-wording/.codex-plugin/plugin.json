@@ -1,6 +1,6 @@
 {
   "name": "ray-prompt-wording",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Refine prompt wording, clarify agent objectives and completion, and diagnose failures.",
   "author": {
     "name": "Ray",
@@ -10,7 +10,7 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Ray's Prompt Wording",
-    "shortDescription": "Refine prompt wording, clarify agent objectives and completion, and diagnose failures.",
+    "shortDescription": "Clear prompts and agent goals",
     "longDescription": "Refine prompt wording, clarify agent objectives and completion, and diagnose failures.",
     "developerName": "Ray",
     "category": "Productivity",
