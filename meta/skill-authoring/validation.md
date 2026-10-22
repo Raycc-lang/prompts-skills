@@ -159,3 +159,21 @@ guidance was expanded but no deletion comparison was executed. Outcomes support 
 specific branches, not a general effectiveness estimate. Maintenance contains exact
 inputs and final outputs; full internal reasoning and complete host tool traces were
 not available as exportable test artifacts.
+
+# Validation — 2026-10-22 — findings and settled decisions
+
+Parsed frontmatter using the repository's existing supported fields, checked all
+runtime Markdown resource links, and ran git diff --check. An exact comparison
+confirmed that removing the two authorized new paragraphs reproduces the prior
+SKILL.md byte for byte. References, selection guidance, and other runtime rules
+were not changed.
+
+Author inspection checked the intended distinctions: an observed or instruction-based
+finding must identify its consequence and repair; inferred risks stay untested and
+preferences are not relabeled as defects. A settled decision remains carried forward
+unless its requirement changes or evidence invalidates an assumption; reassessment
+is limited to affected decisions.
+
+These are mechanical checks and author inspection. No new behavioral comparison,
+independent review, or host-selection test was run; no measured improvement is claimed.
+No regression case derived from the reviewer's failure to use the skill was added.

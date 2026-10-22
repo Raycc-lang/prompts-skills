@@ -111,3 +111,20 @@ and actual host selection. The skill applies those decisions to its own maintena
 This is a coordinated refactor, not a claim that the prior skill always produced poor
 results. The 2026-09-08 successful consolidation experiment remains counter-evidence to
 that blanket interpretation. No historical result or rejected direction was erased.
+
+# Revision — 2026-10-22 — traceable findings and settled decisions
+
+Ray authorized only items 2 and 3 from the preceding review: make consequential
+findings traceable to instructions or observations, and clarify when accepted
+decisions may reopen. These are explicit user requirements strengthening existing
+guidance, not evidence that the authoring skill caused the reviewer's mistake.
+
+Added the finding-to-evidence-to-repair requirement in section 5, including the
+distinction between untested risks, defects, and preference changes. Added the
+reopening condition in section 1: a changed user requirement or evidence invalidating
+a relevant assumption; identify the change and reassess affected decisions only.
+
+Ray rejected item 1 because the reviewer had not used this skill. No existing-coverage
+rule or regression case based on that incident was added. No new report template,
+approval gate, or independent-review requirement was introduced. Other guidance,
+references, and routing remain unchanged. See validation.md for the checks performed.

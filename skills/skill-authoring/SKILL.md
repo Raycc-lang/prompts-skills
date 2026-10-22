@@ -18,6 +18,9 @@ result from available artifacts and user corrections. Ask for missing informatio
 when its answer changes the design; otherwise proceed with a narrow assumption.
 For revisions, read existing instructions, resources, and maintenance records before
 changing rules so established requirements and rejected approaches remain visible.
+Carry forward accepted decisions and rejected approaches. Reopen them only when the
+user changes the requirement or new evidence invalidates a relevant assumption.
+Identify what changed and reassess only the affected decisions.
 
 - **Create / distill:** identify what ordinary execution misses. Without a baseline,
   treat the suspected gap as a hypothesis; explicit user methods can still be encoded.
@@ -127,6 +130,10 @@ Deliver the requested package or review, material decisions, checks performed, a
 remaining uncertainty. Distinguish structural checks, author walkthroughs, actual
 agent runs, and comparative evidence. When execution is unavailable, provide the
 candidate and runnable cases with the unverified claim stated explicitly.
+
+Support each consequential finding with the relevant instruction or observed behavior,
+explain the resulting failure, and connect the proposed repair to it. Label inferred
+risks as untested and distinguish defects from preference changes.
 
 Keep maintenance outside the install unit in the existing project location, or a
 sibling meta/<skill-name>/. Record the source and strength of consequential decisions,
